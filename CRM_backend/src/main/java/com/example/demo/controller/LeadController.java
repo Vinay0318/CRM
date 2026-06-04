@@ -48,7 +48,7 @@ public class LeadController {
 
     
     @PutMapping("/update/{id}")
-    public Lead updateCustomer(
+    public Lead updateLead(
             @PathVariable UUID id,
             @RequestBody Lead l) {
 

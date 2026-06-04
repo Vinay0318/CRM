@@ -28,7 +28,7 @@ public class Lead {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID Leadid;
+	private UUID leadid;
 	@Column
 	private String name;
 	@Column

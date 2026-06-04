@@ -1,86 +1,187 @@
-import React,
-{
- useEffect,
- useState
-}
-from 'react';
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-import LeadService from '../../services/LeadService';
+import LeadService from "../../services/LeadService";
 
-import NewLeads from '../leads/NewLeads';
-import AssignedLeads from '../leads/AssignedLeads';
-import LeadDetails from '../leads/LeadDetails';
+import NewLeads from "./NewLeads";
+import AssignedLeads from "./AssignedLeads";
+import LeadDetails from "../leads/LeadDetails";
 
 function ManagerDashboard() {
 
- const [leads,setLeads] = useState([]);
- const [selected,setSelected] = useState(null);
+    const [leads, setLeads] = useState([]);
+    const [selectedLead, setSelectedLead] = useState(null);
 
- useEffect(()=>{
+    const [search, setSearch] = useState("");
+    const [previousCount, setPreviousCount] = useState(0);
 
-   loadLeads();
+    useEffect(() => {
 
- },[]);
+        loadLeads();
 
- const loadLeads=()=>{
+        const interval = setInterval(() => {
+            loadLeads();
+        }, 10000);
 
-   LeadService.getAllLeads()
-   .then(res=>{
+        return () => clearInterval(interval);
 
-      setLeads(res.data);
+    }, []);
 
-   });
+    const loadLeads = () => {
 
- }
+        LeadService.getAllLeads()
+            .then((res) => {
 
- const newCount =
+                const allLeads = res.data;
 
- leads.filter(
- lead => lead.status==="NEW"
- ).length;
+                setLeads(allLeads);
 
- return (
+                const currentCount =
+                    allLeads.filter(
+                        lead => lead.status === "NEW"
+                    ).length;
 
-  <div className="container-fluid">
+                if (
+                    previousCount > 0 &&
+                    currentCount > previousCount
+                ) {
+                    toast.info("🔔 New Lead Arrived");
+                }
 
-   <div className="alert alert-warning mt-3">
+                setPreviousCount(currentCount);
 
-      🔔 {newCount} New Leads
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
-   </div>
+    const filteredLeads = leads.filter(
+        lead =>
+            lead.name
+                .toLowerCase()
+                .includes(search.toLowerCase())
+    );
 
-   <div className="row">
+    const newLeadCount =
+        leads.filter(
+            lead => lead.status === "NEW"
+        ).length;
 
-      <div className="col-md-4">
+    const assignedLeadCount =
+        leads.filter(
+            lead => lead.status !== "NEW"
+        ).length;
 
-         <NewLeads
-            leads={leads}
-            onSelect={setSelected}
-         />
+    return (
 
-         <hr/>
+        <div className="container-fluid mt-4">
 
-         <AssignedLeads
-            leads={leads}
-            onSelect={setSelected}
-         />
+            {/* Statistics Cards */}
 
-      </div>
+            <div className="row mb-4">
 
-      <div className="col-md-8">
+                <div className="col-md-4">
 
-         <LeadDetails
-            lead={selected}
-         />
+                    <div className="stat-card">
 
-      </div>
+                        <h3>
+                            {leads.length}
+                        </h3>
 
-   </div>
+                        <p>Total Leads</p>
 
-  </div>
+                    </div>
 
- );
+                </div>
 
+                <div className="col-md-4">
+
+                    <div className="stat-card stat-new">
+
+                        <h3>
+                            {newLeadCount}
+                        </h3>
+
+                        <p>New Leads</p>
+
+                    </div>
+
+                </div>
+
+                <div className="col-md-4">
+
+                    <div className="stat-card stat-assigned">
+
+                        <h3>
+                            {assignedLeadCount}
+                        </h3>
+
+                        <p>Assigned Leads</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {/* Search */}
+
+            <div className="mb-3">
+
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Lead By Name..."
+                    value={search}
+                    onChange={(e) =>
+                        setSearch(e.target.value)
+                    }
+                />
+
+            </div>
+
+            {/* Notification */}
+
+            <div className="alert alert-warning">
+
+                🔔 {newLeadCount} New Leads
+
+            </div>
+
+            <div className="row">
+
+                <div className="col-md-4">
+
+                    <div className="lead-sidebar">
+
+                        <NewLeads
+                            leads={filteredLeads}
+                            onSelect={setSelectedLead}
+                        />
+
+                        <AssignedLeads
+                            leads={filteredLeads}
+                            onSelect={setSelectedLead}
+                        />
+
+                    </div>
+
+                </div>
+
+                <div className="col-md-8">
+
+                    <LeadDetails
+                        lead={selectedLead}
+                        refreshLeads={loadLeads}
+                    />
+
+                </div>
+
+            </div>
+
+        </div>
+    );
 }
 
 export default ManagerDashboard;

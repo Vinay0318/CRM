@@ -29,41 +29,25 @@ public class LeadServiceImpl implements LeadService {
 
 
 	@Override
-	public Lead updateLead(UUID id, Lead l) {
+	
+	 public Lead updateLead(UUID id, Lead l) {
 
-	    Lead old = lr.findById(id).orElse(null);
+        Lead oldLead =
+                lr.findById(id)
+                  .orElse(null);
 
-	    if (old != null) {
-	    	
-	    	if(l.getName()!=null)
-	    		old.setName(l.getName());
+        if (oldLead != null) {
 
-	        if (l.getEmail() != null)
-	            old.setEmail(l.getEmail());
+            oldLead.setStatus(
+                    l.getStatus()
+            );
 
-	        if (l.getMobile_no() != null)
-	            old.setMobile_no(l.getMobile_no());
-	        
-	        if(l.getStatus()!=null)
-	        	old.setStatus(l.getStatus());
+            return lr.save(oldLead);
+        }
 
-	        if (l.getLocation() != null)
-	            old.setLocation(l.getLocation());
-	       
-	        if(l.getBudget() > 0)
-	        	old.setBudget(l.getBudget());
+        return null;
+    }
 
-	        if (l.getProperty_type() != null)
-	            old.setProperty_type(l.getProperty_type());
-	        
-	        if(l.getAdditional_requirement() !=null)
-	        	old.setAdditional_requirement(l.getAdditional_requirement());
-
-	        return lr.save(old);
-	    }
-
-	    return null;
-	}
 
 	@Override
 	public String deleteLead(UUID id) {

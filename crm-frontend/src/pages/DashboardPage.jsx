@@ -1,21 +1,34 @@
-import React from 'react';
-import ManagerDashboard from '../components/dashboard/ManagerDashboard';
-import '../styles/Dashboard.css';
+import Sidebar from "../components/common/Sidebar";
+
+import ManagerDashboard
+from "../components/dashboard/ManagerDashboard";
+
+import "../styles/Dashboard.css";
 
 function DashboardPage() {
 
   return (
-    <div className="dashboard-page">
 
-      <div className="dashboard-header">
+    <div className="container-fluid">
 
-        <h1>Lead Management Dashboard</h1>
+      <div className="row">
+
+        <div className="col-md-2 p-0">
+
+          <Sidebar />
+
+        </div>
+
+        <div className="col-md-10">
+
+          <ManagerDashboard />
+
+        </div>
 
       </div>
 
-      <ManagerDashboard />
-
     </div>
+
   );
 }
 

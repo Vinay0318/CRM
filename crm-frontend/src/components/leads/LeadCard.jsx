@@ -1,30 +1,60 @@
-import React from 'react';
-
-function LeadCard({lead,onSelect}) {
+function LeadCard({
+  lead,
+  onSelect
+}) {
 
   return (
 
     <div
-      className="card mb-2 p-3 shadow-sm"
-      style={{cursor:"pointer"}}
-      onClick={()=>onSelect(lead)}
+      className="lead-card"
+      onClick={() =>
+        onSelect(lead)
+      }
     >
 
-      <h6>{lead.name}</h6>
+      <div>
 
-      <small>{lead.location}</small>
+        <h6>
+          {lead.name}
+        </h6>
 
-      <br/>
+        <small>
 
-      <small>
-        ₹ {lead.budget}
-      </small>
+          📍 {lead.location}
 
-      <br/>
+        </small>
 
-      <span className="badge bg-primary">
-        {lead.status}
-      </span>
+        <br />
+
+        <small>
+
+          ₹ {lead.budget}
+
+        </small>
+
+      </div>
+
+      <div>
+
+        {
+          lead.status === "NEW" ?
+
+          (
+            <span className="badge bg-danger">
+              NEW
+            </span>
+          )
+
+          :
+
+          (
+            <span className="badge bg-primary">
+              {lead.status}
+            </span>
+          )
+        }
+
+      </div>
 
     </div>
 

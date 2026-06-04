@@ -1,6 +1,5 @@
-import React from 'react';
-import EnquiryForm from '../components/leads/EnquiryForm';
-import '../styles/Enquiry.css';
+import EnquiryForm from "../components/leads/EnquiryForm";
+import "../styles/Enquiry.css";
 
 function EnquiryPage() {
 
@@ -8,22 +7,30 @@ function EnquiryPage() {
 
     <div className="enquiry-page">
 
-      <div className="enquiry-container">
+      <div className="container">
 
-        <h1 className="title">
-          Property Enquiry
-        </h1>
+        <div className="text-center mb-5">
 
-        <p className="subtitle">
-          Submit your requirements and our team will contact you shortly.
-        </p>
+          <h1 className="display-5 fw-bold">
+
+            Find Your Dream Property
+
+          </h1>
+
+          <p className="lead">
+
+            Submit your enquiry and
+            our team will contact you.
+
+          </p>
+
+        </div>
 
         <EnquiryForm />
 
       </div>
 
     </div>
-
   );
 }
 
