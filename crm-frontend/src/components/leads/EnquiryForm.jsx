@@ -313,14 +313,12 @@ function EnquiryForm() {
             </div>
 
           </div>
-
           <button
-            className="btn btn-primary btn-lg w-100"
-          >
-
-            Submit Enquiry
-
-          </button>
+ type="submit"
+ className="btn-submit"
+>
+ Submit Enquiry
+</button>
 
         </form>
 
