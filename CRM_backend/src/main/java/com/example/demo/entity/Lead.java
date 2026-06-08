@@ -33,8 +33,8 @@ public class Lead {
 	private String name;
 	@Column
 	private String email;
-	@Column
-	private String mobile_no;
+	@Column(name="mobile_no")
+	private String mobileNo;
 	@Column
 	private String location;
 	@Enumerated(EnumType.STRING)

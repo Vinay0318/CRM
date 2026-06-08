@@ -174,6 +174,9 @@ function ManagerDashboard() {
                     <LeadDetails
                         lead={selectedLead}
                         refreshLeads={loadLeads}
+                        clearLead={() =>
+                            setSelectedLead(null)
+                        }
                     />
 
                 </div>

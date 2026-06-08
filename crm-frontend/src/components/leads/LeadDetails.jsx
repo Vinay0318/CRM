@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import LeadService from "../../services/LeadService";
 
-function LeadDetails({ lead, refreshLeads }) {
+function LeadDetails({
+    lead,
+    refreshLeads,
+    clearLead
+}) {
 
     const [status, setStatus] = useState("");
 
@@ -40,11 +44,6 @@ function LeadDetails({ lead, refreshLeads }) {
                 status: status
             };
 
-            console.log(
-                "Updating Lead:",
-                leadId
-            );
-
             await LeadService.updateLead(
                 leadId,
                 updatedLead
@@ -62,6 +61,46 @@ function LeadDetails({ lead, refreshLeads }) {
 
             toast.error(
                 "Update Failed"
+            );
+        }
+    };
+
+    const deleteLead = async () => {
+
+        const leadId =
+            lead.Leadid ||
+            lead.leadid;
+
+        if (
+            !window.confirm(
+                "Delete this lead?"
+            )
+        ) {
+            return;
+        }
+
+        try {
+
+            await LeadService.deleteLead(
+                leadId
+            );
+
+            toast.success(
+                "Lead Deleted"
+            );
+
+            refreshLeads();
+
+            if (clearLead) {
+                clearLead();
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+            toast.error(
+                "Delete Failed"
             );
         }
     };
@@ -91,7 +130,7 @@ function LeadDetails({ lead, refreshLeads }) {
             <p>
                 <strong>Mobile:</strong>
                 {" "}
-                {lead.mobile_no}
+                {lead.mobile_no || lead.mobileNo}
             </p>
 
             <p>
@@ -108,7 +147,6 @@ function LeadDetails({ lead, refreshLeads }) {
 
             <p>
                 <strong>Budget:</strong>
-                {" "}
                 ₹ {lead.budget}
             </p>
 
@@ -133,7 +171,6 @@ function LeadDetails({ lead, refreshLeads }) {
                     )
                 }
             >
-
                 <option value="NEW">
                     NEW
                 </option>
@@ -152,17 +189,25 @@ function LeadDetails({ lead, refreshLeads }) {
 
             </select>
 
-            <button
-                className="btn btn-success"
-                onClick={updateStatus}
-            >
+            <div className="mt-3">
 
-                Update Status
+                <button
+                    className="btn btn-success me-2"
+                    onClick={updateStatus}
+                >
+                    Update Status
+                </button>
 
-            </button>
+                <button
+                    className="btn btn-danger"
+                    onClick={deleteLead}
+                >
+                    Delete Lead
+                </button>
+
+            </div>
 
         </div>
-
     );
 }
 
