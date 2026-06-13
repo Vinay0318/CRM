@@ -23,16 +23,7 @@ public class CustomUserDetailsService
             String email)
             throws UsernameNotFoundException {
 
-        // Hardcoded Admin Support
-
-        if(email.equals("vinay@gmail.com")) {
-
-            return new org.springframework.security.core.userdetails.User(
-                    "vinay@gmail.com",
-                    "",
-                    Collections.emptyList()
-            );
-        }
+        
 
         User user =
                 userRepo.findByEmail(email)

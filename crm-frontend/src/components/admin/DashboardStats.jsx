@@ -4,14 +4,23 @@ function DashboardStats({
     title,
     value,
     icon,
-    bgClass
+    bgClass,
+    onClick
 }) {
 
     return (
 
-        <div className="col-lg-3 col-md-6 mb-4">
+        <div
+            className="col-lg-3 col-md-6 mb-4"
+            onClick={onClick}
+            style={{
+                cursor: "pointer"
+            }}
+        >
 
-            <div className={`stats-card ${bgClass}`}>
+            <div
+                className={`stats-card ${bgClass}`}
+            >
 
                 <div>
 
@@ -22,7 +31,9 @@ function DashboardStats({
                 </div>
 
                 <div className="stats-icon">
+
                     {icon}
+
                 </div>
 
             </div>

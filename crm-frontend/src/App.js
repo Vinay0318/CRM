@@ -35,6 +35,11 @@ from "./pages/AgentDashboardPage";
 import ProtectedRoute
 from "./components/common/ProtectedRoute";
 
+import ManagersViewPage from "./components/admin/ManagersViewPage";
+import AgentsViewPage from "./components/admin/AgentsViewPage";
+import PropertiesViewPage from "./components/admin/PropertiesViewPage";
+import LeadsViewPage from "./components/admin/LeadsViewPage";
+
 import {
 ToastContainer
 }
@@ -140,7 +145,41 @@ role="AGENT"
 }
 />
 
+<Route
+path="/admin/view/managers"
+element={
+<ProtectedRoute role="ADMIN">
+<ManagersViewPage />
+</ProtectedRoute>
+}
+/>
 
+<Route
+path="/admin/view/agents"
+element={
+<ProtectedRoute role="ADMIN">
+<AgentsViewPage />
+</ProtectedRoute>
+}
+/>
+
+<Route
+path="/admin/view/properties"
+element={
+<ProtectedRoute role="ADMIN">
+<PropertiesViewPage />
+</ProtectedRoute>
+}
+/>
+
+<Route
+path="/admin/view/leads"
+element={
+<ProtectedRoute role="ADMIN">
+<LeadsViewPage />
+</ProtectedRoute>
+}
+/>
 
 </Routes>
 

@@ -63,6 +63,11 @@ public class PropertyServiceImpl
 
             old.setDescription(
                     property.getDescription());
+            old.setLatitude(
+                    property.getLatitude());
+
+            old.setLongitude(
+                    property.getLongitude());
 
             return propertyRepo.save(old);
         }

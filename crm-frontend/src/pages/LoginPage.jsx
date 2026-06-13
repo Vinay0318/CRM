@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import Swal from "sweetalert2";
-
 import AuthService from "../services/AuthService";
-
-import {
-    RecaptchaVerifier,
-    signInWithPhoneNumber
-} from "firebase/auth";
-
-import { auth } from "../firebase/firebaseConfig";
-
 import "../styles/Login.css";
 
 function LoginPage() {
@@ -27,15 +17,14 @@ function LoginPage() {
             password: ""
         });
 
-    const [mobile, setMobile] =
+    const [emailOtp, setEmailOtp] =
         useState("");
 
     const [otp, setOtp] =
         useState("");
 
-    const [confirmationResult,
-        setConfirmationResult] =
-        useState(null);
+    const [otpSent, setOtpSent] =
+        useState(false);
 
     const handleChange = (e) => {
 
@@ -117,71 +106,25 @@ function LoginPage() {
 
         try {
 
-            if (!mobile.trim()) {
-
-                Swal.fire({
-                    icon: "error",
-                    title: "Enter Mobile Number"
-                });
-
-                return;
-            }
-
-            let phoneNumber =
-                mobile.trim();
-
-            if (
-                !phoneNumber.startsWith("+")
-            ) {
-
-                phoneNumber =
-                    `+91${phoneNumber}`;
-            }
-
-            console.log(
-                "Sending OTP To:",
-                phoneNumber
+            await AuthService.sendOtp(
+                emailOtp
             );
 
-            if (
-                !window.recaptchaVerifier
-            ) {
-
-                window.recaptchaVerifier =
-                    new RecaptchaVerifier(
-                        auth,
-                        "recaptcha-container",
-                        {
-                            size: "normal"
-                        }
-                    );
-            }
-
-            const result =
-                await signInWithPhoneNumber(
-                    auth,
-                    phoneNumber,
-                    window.recaptchaVerifier
-                );
-
-            setConfirmationResult(
-                result
-            );
+            setOtpSent(true);
 
             Swal.fire({
                 icon: "success",
-                title:
-                    "OTP Sent Successfully"
+                title: "OTP Sent Successfully"
             });
 
         } catch (error) {
 
-            console.error(error);
-
             Swal.fire({
                 icon: "error",
-                title: "OTP Error",
-                text: error.message
+                title: "Unable To Send OTP",
+                text:
+                    error.response?.data ||
+                    "Something Went Wrong"
             });
         }
     };
@@ -190,18 +133,10 @@ function LoginPage() {
 
         try {
 
-            await confirmationResult.confirm(
-                otp
-            );
-
-            const mobileNumber =
-                mobile.startsWith("+91")
-                    ? mobile.replace("+91", "")
-                    : mobile;
-
             const response =
-                await AuthService.mobileLogin(
-                    mobileNumber
+                await AuthService.verifyOtp(
+                    emailOtp,
+                    otp
                 );
 
             localStorage.setItem(
@@ -232,14 +167,12 @@ function LoginPage() {
 
         } catch (error) {
 
-            console.error(error);
-
             Swal.fire({
                 icon: "error",
                 title: "Invalid OTP",
                 text:
                     error.response?.data ||
-                    error.message
+                    "OTP Verification Failed"
             });
         }
     };
@@ -313,30 +246,24 @@ function LoginPage() {
                         >
                             Password Login
                         </button>
-
                         <button
-                            type="button"
-                            className={
-                                loginMode ===
-                                "OTP"
-                                    ? "active"
-                                    : ""
-                            }
-                            onClick={() =>
-                                setLoginMode(
-                                    "OTP"
-                                )
-                            }
-                        >
-                            OTP Login
-                        </button>
+    type="button"
+    className={
+        loginMode === "OTP"
+            ? "active"
+            : ""
+    }
+    onClick={() =>
+        setLoginMode("OTP")
+    }
+>
+    Admin OTP Login
+</button>
 
                     </div>
 
                     {
-
-                        loginMode ===
-                            "PASSWORD"
+                        loginMode === "PASSWORD"
 
                             ?
 
@@ -347,6 +274,14 @@ function LoginPage() {
                                         handleSubmit
                                     }
                                 >
+
+<p style={{
+    color:"#dc3545",
+    fontSize:"14px",
+    marginBottom:"10px"
+}}>
+    OTP Login is available only for Admin.
+</p>
 
                                     <input
                                         type="email"
@@ -392,28 +327,25 @@ function LoginPage() {
                                 <div>
 
                                     <input
-                                        type="text"
-                                        placeholder="+919589163445"
-                                        value={mobile}
+                                        type="email"
+                                        placeholder="Enter Email"
+                                        value={emailOtp}
                                         onChange={(e) =>
-                                            setMobile(
+                                            setEmailOtp(
                                                 e.target.value
                                             )
                                         }
                                     />
 
                                     <button
+                                        type="button"
                                         className="login-btn"
-                                        onClick={
-                                            sendOTP
-                                        }
+                                        onClick={sendOTP}
                                     >
                                         Send OTP
                                     </button>
 
-                                    {
-
-                                        confirmationResult &&
+                                    {otpSent && (
 
                                         <>
 
@@ -429,27 +361,20 @@ function LoginPage() {
                                             />
 
                                             <button
+                                                type="button"
                                                 className="login-btn"
-                                                onClick={
-                                                    verifyOTP
-                                                }
+                                                onClick={verifyOTP}
                                             >
                                                 Verify OTP
                                             </button>
 
                                         </>
 
-                                    }
-
-                                    <div
-                                        id="recaptcha-container"
-                                        className="mt-3"
-                                    ></div>
+                                    )}
 
                                 </div>
 
                             )
-
                     }
 
                     <button

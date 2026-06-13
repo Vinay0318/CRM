@@ -60,8 +60,27 @@ class AuthService {
     // Check Login
     isLoggedIn() {
 
+
         return !!localStorage.getItem(
             "token"
+        );
+    }
+    sendOtp(email) {
+
+        return axios.post(
+            `${BASE_URL}/send-otp`,
+            { email }
+        );
+    }
+    
+    verifyOtp(email, otp) {
+    
+        return axios.post(
+            `${BASE_URL}/verify-otp`,
+            {
+                email,
+                otp
+            }
         );
     }
 }

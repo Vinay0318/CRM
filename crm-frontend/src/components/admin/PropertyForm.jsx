@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 function PropertyForm({ loadProperties }) {
 
     const [property, setProperty] = useState({
+
         name: "",
         price: "",
         type: "APARTMENT",
@@ -12,14 +13,21 @@ function PropertyForm({ loadProperties }) {
         areaSqft: "",
         builderName: "",
         propertyStatus: "AVAILABLE",
-        description: ""
+        description: "",
+        latitude: "",
+        longitude: ""
+
     });
 
     const handleChange = (e) => {
 
         setProperty({
+
             ...property,
-            [e.target.name]: e.target.value
+
+            [e.target.name]:
+                e.target.value
+
         });
     };
 
@@ -29,17 +37,29 @@ function PropertyForm({ loadProperties }) {
 
         try {
 
-            await PropertyService.addProperty(property);
+            await PropertyService.addProperty(
+                property
+            );
 
             Swal.fire({
+
                 icon: "success",
-                title: "Success",
-                text: "Property Added Successfully",
+
+                title:
+                    "Success",
+
+                text:
+                    "Property Added Successfully",
+
                 timer: 1500,
-                showConfirmButton: false
+
+                showConfirmButton:
+                    false
+
             });
 
             setProperty({
+
                 name: "",
                 price: "",
                 type: "APARTMENT",
@@ -47,19 +67,31 @@ function PropertyForm({ loadProperties }) {
                 areaSqft: "",
                 builderName: "",
                 propertyStatus: "AVAILABLE",
-                description: ""
+                description: "",
+                latitude: "",
+                longitude: ""
+
             });
 
             if(loadProperties){
+
                 loadProperties();
             }
 
-        } catch (error) {
+        }
+
+        catch(error) {
 
             Swal.fire({
+
                 icon: "error",
-                title: "Error",
-                text: "Error Adding Property"
+
+                title:
+                    "Error",
+
+                text:
+                    "Error Adding Property"
+
             });
         }
     };
@@ -68,13 +100,16 @@ function PropertyForm({ loadProperties }) {
 
         <div className="property-form-card">
 
-            <h4>Add Property</h4>
+            <h4>
+                Add Property
+            </h4>
 
             <form onSubmit={handleSubmit}>
 
                 <div className="row">
 
                     <div className="col-md-6 mb-3">
+
                         <input
                             type="text"
                             name="name"
@@ -84,9 +119,11 @@ function PropertyForm({ loadProperties }) {
                             onChange={handleChange}
                             required
                         />
+
                     </div>
 
                     <div className="col-md-6 mb-3">
+
                         <input
                             type="number"
                             name="price"
@@ -96,6 +133,7 @@ function PropertyForm({ loadProperties }) {
                             onChange={handleChange}
                             required
                         />
+
                     </div>
 
                     <div className="col-md-6 mb-3">
@@ -106,6 +144,7 @@ function PropertyForm({ loadProperties }) {
                             value={property.type}
                             onChange={handleChange}
                         >
+
                             <option value="APARTMENT">
                                 Apartment
                             </option>
@@ -167,6 +206,34 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-6 mb-3">
 
+                        <input
+                            type="number"
+                            step="any"
+                            name="latitude"
+                            className="form-control"
+                            placeholder="Latitude (18.5204)"
+                            value={property.latitude}
+                            onChange={handleChange}
+                        />
+
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+
+                        <input
+                            type="number"
+                            step="any"
+                            name="longitude"
+                            className="form-control"
+                            placeholder="Longitude (73.8567)"
+                            value={property.longitude}
+                            onChange={handleChange}
+                        />
+
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+
                         <select
                             name="propertyStatus"
                             className="form-select"
@@ -184,6 +251,14 @@ function PropertyForm({ loadProperties }) {
 
                             <option value="SOLD">
                                 Sold
+                            </option>
+
+                            <option value="UNDER_CONSTRUCTION">
+                                Under Construction
+                            </option>
+
+                            <option value="READY_TO_MOVE">
+                                Ready To Move
                             </option>
 
                         </select>

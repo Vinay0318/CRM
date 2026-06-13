@@ -1,0 +1,226 @@
+/* Page Background */
+
+.view-page {
+    min-height: 100vh;
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f8fafc
+    );
+    padding: 30px;
+}
+
+/* Page Heading */
+
+.view-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
+}
+
+/* Search Box */
+
+.search-box {
+    border-radius: 15px;
+    border: none;
+    padding: 12px 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+/* Cards */
+
+.crm-card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    background: white;
+    transition: all .3s ease;
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.08);
+}
+
+.crm-card:hover {
+
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.15);
+}
+
+/* Avatar */
+
+.crm-avatar {
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    border: 4px solid #2563eb;
+
+    margin: 15px auto;
+}
+
+/* Card Name */
+
+.crm-name {
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    color: #1e293b;
+}
+
+/* City Badge */
+
+.crm-city {
+
+    display: inline-block;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    padding: 6px 15px;
+
+    border-radius: 30px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-top: 8px;
+}
+
+/* Email */
+
+.crm-email {
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    margin-top: 10px;
+}
+
+/* Details Button */
+
+.details-btn {
+
+    width: 100%;
+
+    border: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #3b82f6
+        );
+
+    color: white;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    margin-top: 15px;
+
+    font-weight: 600;
+}
+
+.details-btn:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            #1d4ed8,
+            #2563eb
+        );
+}
+
+/* Property Image */
+
+.property-img {
+
+    width: 100%;
+
+    height: 220px;
+
+    object-fit: cover;
+}
+
+/* Modal */
+
+.modal-content {
+
+    border-radius: 20px !important;
+
+    border: none !important;
+
+    overflow: hidden;
+}
+
+.modal-header {
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #3b82f6
+        );
+
+    color: white;
+}
+
+.modal-body {
+
+    padding: 25px;
+}
+
+.modal-body p {
+
+    margin-bottom: 12px;
+
+    font-size: 15px;
+}
+
+/* Status */
+
+.status-badge {
+
+    padding: 6px 15px;
+
+    border-radius: 30px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.NEW {
+
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.CONTACTED {
+
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.INTERESTED {
+
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.BOOKING {
+
+    background: #fee2e2;
+    color: #dc2626;
+}

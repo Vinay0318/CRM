@@ -23,4 +23,6 @@ public interface PropertyRepository
 
     List<Property> findByBuilderName(
             String builderName);
+    
+   
 }

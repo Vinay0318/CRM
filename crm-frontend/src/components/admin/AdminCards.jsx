@@ -1,4 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useEffect,
+    useState
+} from "react";
+
+import {
+    useNavigate
+} from "react-router-dom";
 
 import DashboardStats from "./DashboardStats";
 
@@ -8,12 +15,19 @@ import PropertyService from "../../services/PropertyService";
 
 function AdminCards() {
 
-    const [stats, setStats] = useState({
-        leads: 0,
-        managers: 0,
-        agents: 0,
-        properties: 0
-    });
+    const navigate =
+        useNavigate();
+
+    const [stats,
+        setStats] =
+        useState({
+
+            leads: 0,
+            managers: 0,
+            agents: 0,
+            properties: 0
+
+        });
 
     useEffect(() => {
 
@@ -21,44 +35,47 @@ function AdminCards() {
 
     }, []);
 
-    const loadDashboardData = async () => {
+    const loadDashboardData =
+        async () => {
 
-        try {
+            try {
 
-            const leadResponse =
-                await LeadService.getAllLeads();
+                const leadResponse =
+                    await LeadService.getAllLeads();
 
-            const managerResponse =
-                await UserService.getManagers();
+                const managerResponse =
+                    await UserService.getManagers();
 
-            const agentResponse =
-                await UserService.getAgents();
+                const agentResponse =
+                    await UserService.getAgents();
 
-            const propertyResponse =
-                await PropertyService.getAllProperties();
+                const propertyResponse =
+                    await PropertyService.getAllProperties();
 
-            setStats({
-                leads:
-                    leadResponse.data.length,
+                setStats({
 
-                managers:
-                    managerResponse.data.length,
+                    leads:
+                        leadResponse.data.length,
 
-                agents:
-                    agentResponse.data.length,
+                    managers:
+                        managerResponse.data.length,
 
-                properties:
-                    propertyResponse.data.length
-            });
+                    agents:
+                        agentResponse.data.length,
 
-        } catch (error) {
+                    properties:
+                        propertyResponse.data.length
 
-            console.error(
-                "Dashboard Error",
-                error
-            );
-        }
-    };
+                });
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+            }
+        };
 
     return (
 
@@ -69,6 +86,11 @@ function AdminCards() {
                 value={stats.leads}
                 icon="📋"
                 bgClass="bg-blue"
+                onClick={() =>
+                    navigate(
+                        "/admin/view/leads"
+                    )
+                }
             />
 
             <DashboardStats
@@ -76,6 +98,11 @@ function AdminCards() {
                 value={stats.managers}
                 icon="👨‍💼"
                 bgClass="bg-green"
+                onClick={() =>
+                    navigate(
+                        "/admin/view/managers"
+                    )
+                }
             />
 
             <DashboardStats
@@ -83,6 +110,11 @@ function AdminCards() {
                 value={stats.agents}
                 icon="👨‍💻"
                 bgClass="bg-orange"
+                onClick={() =>
+                    navigate(
+                        "/admin/view/agents"
+                    )
+                }
             />
 
             <DashboardStats
@@ -90,6 +122,11 @@ function AdminCards() {
                 value={stats.properties}
                 icon="🏠"
                 bgClass="bg-purple"
+                onClick={() =>
+                    navigate(
+                        "/admin/view/properties"
+                    )
+                }
             />
 
         </div>
