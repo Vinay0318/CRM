@@ -1,4 +1,11 @@
-import React from "react";
+import React,
+{
+    useState
+}
+from "react";
+
+import AdminLayout
+from "../components/admin/AdminLayout";
 
 import AgentForm
 from "../components/admin/AgentForm";
@@ -6,27 +13,88 @@ from "../components/admin/AgentForm";
 import AgentTable
 from "../components/admin/AgentTable";
 
-import "../styles/Agent.css";
-
 function AgentsPage() {
+
+    const [showForm,
+        setShowForm] =
+        useState(false);
 
     return (
 
-        <div className="agent-page">
+        <AdminLayout>
 
-            <h2 className="mb-4">
-                Agent Management
-            </h2>
+<div className="lead-page-header">
 
-            <AgentForm />
+<div>
 
-            <div className="mt-4">
+    <h1 className="lead-page-title">
+        👨‍💻 Approved Agents
+    </h1>
+
+    <p className="lead-page-subtitle">
+        Manage all approved agents
+    </p>
+
+</div>
+
+<button
+    className="add-btn"
+    onClick={() => setShowForm(true)}
+>
+    + Add Agent
+</button>
+
+</div>
+
+            {
+                showForm && (
+
+                    <div className="form-modal">
+
+                        <div
+                            className="form-modal-content"
+                        >
+
+                            <div
+                                style={{
+                                    display:"flex",
+                                    justifyContent:"space-between",
+                                    alignItems:"center",
+                                    marginBottom:"20px"
+                                }}
+                            >
+
+                                <h3>
+                                    Add Agent
+                                </h3>
+
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() =>
+                                        setShowForm(false)
+                                    }
+                                >
+                                    X
+                                </button>
+
+                            </div>
+
+                            <AgentForm />
+
+                        </div>
+
+                    </div>
+
+                )
+            }
+
+            <div className="table-card">
 
                 <AgentTable />
 
             </div>
 
-        </div>
+        </AdminLayout>
 
     );
 }

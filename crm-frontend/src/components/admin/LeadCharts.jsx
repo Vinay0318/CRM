@@ -1,120 +1,186 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useEffect,
+    useState
+} from "react";
 
 import {
-    PieChart,
-    Pie,
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
     Tooltip,
     ResponsiveContainer,
-    Cell,
-    Legend
+    CartesianGrid
 } from "recharts";
 
-import LeadService from "../../services/LeadService";
+import LeadService
+from "../../services/LeadService";
 
 function LeadCharts() {
 
-    const [data, setData] = useState([]);
+    const [chartData,
+        setChartData] =
+        useState([]);
 
     useEffect(() => {
+
         loadLeadData();
+
     }, []);
 
-    const loadLeadData = async () => {
+    const loadLeadData =
+        async () => {
 
-        try {
+            try {
 
-            const response =
-                await LeadService.getAllLeads();
+                const response =
+                    await LeadService.getAllLeads();
 
-            const leads =
-                response.data;
+                const leads =
+                    response.data;
 
-            const statusCount = {
+                const monthNames = [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec"
+                ];
 
-                NEW: 0,
-                CONTACTED: 0,
-                INTERESTED: 0,
-                BOOKING: 0
+                const monthCounts = {};
 
-            };
+                monthNames.forEach(month => {
 
-            leads.forEach(lead => {
+                    monthCounts[month] = 0;
 
-                if (statusCount[lead.status] !== undefined) {
+                });
 
-                    statusCount[lead.status]++;
-                }
+                leads.forEach(lead => {
 
-            });
+                    if(lead.createdAt){
 
-            setData([
-                {
-                    name: "New",
-                    value: statusCount.NEW
-                },
-                {
-                    name: "Contacted",
-                    value: statusCount.CONTACTED
-                },
-                {
-                    name: "Interested",
-                    value: statusCount.INTERESTED
-                },
-                {
-                    name: "Booking",
-                    value: statusCount.BOOKING
-                }
-            ]);
+                        const date =
+                            new Date(
+                                lead.createdAt
+                            );
 
-        } catch (error) {
+                        const month =
+                            monthNames[
+                                date.getMonth()
+                            ];
 
-            console.log(error);
-        }
-    };
+                        monthCounts[month]++;
+                    }
+                });
 
-    const COLORS = [
-        "#4f46e5",
-        "#10b981",
-        "#f59e0b",
-        "#ef4444"
-    ];
+                const data =
+                    monthNames.map(
+                        month => ({
+
+                            month,
+
+                            leads:
+                                monthCounts[
+                                    month
+                                ]
+
+                        })
+                    );
+
+                setChartData(data);
+
+            }
+
+            catch(error){
+
+                console.log(error);
+
+            }
+        };
 
     return (
 
         <div className="chart-card">
 
-            <h5>
-                Lead Status Overview
-            </h5>
+            <div
+                className="d-flex justify-content-between mb-3"
+            >
+
+                <h5>
+                    Monthly Lead Growth
+                </h5>
+
+                <span
+                    className="badge bg-success"
+                >
+                    Live Data
+                </span>
+
+            </div>
 
             <ResponsiveContainer
                 width="100%"
-                height={300}
+                height={350}
             >
 
-                <PieChart>
+                <AreaChart
+                    data={chartData}
+                >
 
-                    <Pie
-                        data={data}
-                        dataKey="value"
-                        outerRadius={100}
-                    >
+                    <defs>
 
-                        {data.map((entry, index) => (
+                        <linearGradient
+                            id="leadColor"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
 
-                            <Cell
-                                key={index}
-                                fill={COLORS[index]}
+                            <stop
+                                offset="5%"
+                                stopColor="#4f46e5"
+                                stopOpacity={0.8}
                             />
 
-                        ))}
+                            <stop
+                                offset="95%"
+                                stopColor="#4f46e5"
+                                stopOpacity={0}
+                            />
 
-                    </Pie>
+                        </linearGradient>
+
+                    </defs>
+
+                    <CartesianGrid
+                        strokeDasharray="3 3"
+                    />
+
+                    <XAxis
+                        dataKey="month"
+                    />
+
+                    <YAxis />
 
                     <Tooltip />
-                    <Legend />
 
-                </PieChart>
+                    <Area
+                        type="monotone"
+                        dataKey="leads"
+                        stroke="#4f46e5"
+                        fillOpacity={1}
+                        fill="url(#leadColor)"
+                    />
+
+                </AreaChart>
 
             </ResponsiveContainer>
 

@@ -1,33 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
+import AdminLayout from "../components/admin/AdminLayout";
 
-import PropertyForm
-from "../components/admin/PropertyForm";
-
-import PropertyTable
-from "../components/admin/PropertyTable";
-
-import "../styles/Property.css";
+import PropertyForm from "../components/admin/PropertyForm";
+import PropertyTable from "../components/admin/PropertyTable";
 
 function PropertiesPage() {
 
+    const [showForm, setShowForm] =
+        useState(false);
+
     return (
 
-        <div className="property-page">
+        <AdminLayout>
 
-            <h2 className="mb-4">
-                Property Management
-            </h2>
+<div className="page-header-modern">
 
-            <PropertyForm />
+    <div className="header-info">
 
-            <div className="mt-4">
+        <div className="header-icon-box">
 
-                <PropertyTable />
-
-            </div>
+            <i className="bi bi-buildings-fill"></i>
 
         </div>
 
+        <div>
+
+            <h1 className="page-title-modern">
+                Properties
+            </h1>
+
+            <p className="page-subtitle-modern">
+                Manage all listed properties
+            </p>
+
+        </div>
+
+    </div>
+
+    <button
+        className="add-btn"
+        onClick={() => setShowForm(true)}
+    >
+        <i className="bi bi-plus-circle me-2"></i>
+        Add Property
+    </button>
+
+</div>
+
+            {
+                showForm &&
+                <PropertyForm />
+            }
+
+<div className="table-card">
+
+<PropertyTable />
+
+</div>
+
+        </AdminLayout>
     );
 }
 

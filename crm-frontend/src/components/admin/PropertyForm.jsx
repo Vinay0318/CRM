@@ -5,15 +5,19 @@ import Swal from "sweetalert2";
 function PropertyForm({ loadProperties }) {
 
     const [property, setProperty] = useState({
+
         name: "",
         price: "",
         type: "APARTMENT",
         location: "",
         areaSqft: "",
         builderName: "",
-        propertyStatus: "AVAILABLE",
         imageUrl: "",
-        description: ""
+        propertyStatus: "AVAILABLE",
+        description: "",
+        latitude: "",
+        longitude: ""
+
     });
 
     const handleChange = (e) => {
@@ -42,16 +46,14 @@ function PropertyForm({ loadProperties }) {
 
                 icon: "success",
 
-                title:
-                    "Success",
+                title: "Success",
 
                 text:
                     "Property Added Successfully",
 
                 timer: 1500,
 
-                showConfirmButton:
-                    false
+                showConfirmButton: false
 
             });
 
@@ -63,6 +65,7 @@ function PropertyForm({ loadProperties }) {
                 location: "",
                 areaSqft: "",
                 builderName: "",
+                imageUrl: "",
                 propertyStatus: "AVAILABLE",
                 description: "",
                 latitude: "",
@@ -70,23 +73,23 @@ function PropertyForm({ loadProperties }) {
 
             });
 
-            if(loadProperties){
+            if (loadProperties) {
 
                 loadProperties();
             }
 
         }
 
-        catch(error) {
+        catch (error) {
 
             Swal.fire({
 
                 icon: "error",
 
-                title:
-                    "Error",
+                title: "Error",
 
                 text:
+                    error.response?.data ||
                     "Error Adding Property"
 
             });
@@ -97,9 +100,27 @@ function PropertyForm({ loadProperties }) {
 
         <div className="property-form-card">
 
-            <h4>
-                Add Property
-            </h4>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+
+                <h4>
+                    Add New Property
+                </h4>
+
+                <button
+                    type="button"
+                    className="btn btn-success"
+                    onClick={() =>
+                        window.open(
+                            "https://www.google.com/maps",
+                            "_blank"
+                        )
+                    }
+                >
+                    <i className="bi bi-geo-alt-fill me-2"></i>
+                    Open Google Maps
+                </button>
+
+            </div>
 
             <form onSubmit={handleSubmit}>
 
@@ -107,11 +128,15 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-6 mb-3">
 
+                        <label className="form-label">
+                            Property Name
+                        </label>
+
                         <input
                             type="text"
                             name="name"
                             className="form-control"
-                            placeholder="Property Name"
+                            placeholder="Enter Property Name"
                             value={property.name}
                             onChange={handleChange}
                             required
@@ -121,11 +146,15 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-6 mb-3">
 
+                        <label className="form-label">
+                            Price
+                        </label>
+
                         <input
                             type="number"
                             name="price"
                             className="form-control"
-                            placeholder="Price"
+                            placeholder="Enter Price"
                             value={property.price}
                             onChange={handleChange}
                             required
@@ -134,6 +163,10 @@ function PropertyForm({ loadProperties }) {
                     </div>
 
                     <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Property Type
+                        </label>
 
                         <select
                             name="type"
@@ -164,11 +197,15 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-6 mb-3">
 
+                        <label className="form-label">
+                            Location
+                        </label>
+
                         <input
                             type="text"
                             name="location"
                             className="form-control"
-                            placeholder="Location"
+                            placeholder="Property Location"
                             value={property.location}
                             onChange={handleChange}
                         />
@@ -177,11 +214,15 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-6 mb-3">
 
+                        <label className="form-label">
+                            Area (Sq Ft)
+                        </label>
+
                         <input
                             type="number"
                             name="areaSqft"
                             className="form-control"
-                            placeholder="Area Sqft"
+                            placeholder="Area in Sqft"
                             value={property.areaSqft}
                             onChange={handleChange}
                         />
@@ -189,6 +230,10 @@ function PropertyForm({ loadProperties }) {
                     </div>
 
                     <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Builder Name
+                        </label>
 
                         <input
                             type="text"
@@ -203,25 +248,54 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-12 mb-3">
 
-    <input
-        type="text"
-        name="imageUrl"
-        className="form-control"
-        placeholder="Property Image URL"
-        value={property.imageUrl}
-        onChange={handleChange}
-    />
+                        <label className="form-label">
+                            Property Image URL
+                        </label>
 
-</div>
+                        <input
+                            type="text"
+                            name="imageUrl"
+                            className="form-control"
+                            placeholder="Paste Image URL"
+                            value={property.imageUrl}
+                            onChange={handleChange}
+                        />
+
+                    </div>
+
+                    {
+                        property.imageUrl && (
+
+                            <div className="col-md-12 mb-3 text-center">
+
+                                <img
+                                    src={property.imageUrl}
+                                    alt="Property Preview"
+                                    style={{
+                                        width: "300px",
+                                        height: "180px",
+                                        objectFit: "cover",
+                                        borderRadius: "15px",
+                                        border: "1px solid #ddd"
+                                    }}
+                                />
+
+                            </div>
+                        )
+                    }
 
                     <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Latitude
+                        </label>
 
                         <input
                             type="number"
                             step="any"
                             name="latitude"
                             className="form-control"
-                            placeholder="Latitude (18.5204)"
+                            placeholder="18.5204"
                             value={property.latitude}
                             onChange={handleChange}
                         />
@@ -230,12 +304,16 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-6 mb-3">
 
+                        <label className="form-label">
+                            Longitude
+                        </label>
+
                         <input
                             type="number"
                             step="any"
                             name="longitude"
                             className="form-control"
-                            placeholder="Longitude (73.8567)"
+                            placeholder="73.8567"
                             value={property.longitude}
                             onChange={handleChange}
                         />
@@ -243,6 +321,10 @@ function PropertyForm({ loadProperties }) {
                     </div>
 
                     <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Property Status
+                        </label>
 
                         <select
                             name="propertyStatus"
@@ -277,8 +359,12 @@ function PropertyForm({ loadProperties }) {
 
                     <div className="col-md-12 mb-3">
 
+                        <label className="form-label">
+                            Description
+                        </label>
+
                         <textarea
-                            rows="4"
+                            rows="5"
                             name="description"
                             className="form-control"
                             placeholder="Property Description"
@@ -294,6 +380,7 @@ function PropertyForm({ loadProperties }) {
                     type="submit"
                     className="property-btn"
                 >
+                    <i className="bi bi-plus-circle me-2"></i>
                     Add Property
                 </button>
 

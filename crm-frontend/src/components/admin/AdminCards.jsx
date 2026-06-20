@@ -3,23 +3,18 @@ import React, {
     useState
 } from "react";
 
-import {
-    useNavigate
-} from "react-router-dom";
+import LeadService
+from "../../services/LeadService";
 
-import DashboardStats from "./DashboardStats";
+import UserService
+from "../../services/UserService";
 
-import LeadService from "../../services/LeadService";
-import UserService from "../../services/UserService";
-import PropertyService from "../../services/PropertyService";
+import PropertyService
+from "../../services/PropertyService";
 
 function AdminCards() {
 
-    const navigate =
-        useNavigate();
-
-    const [stats,
-        setStats] =
+    const [stats, setStats] =
         useState({
 
             leads: 0,
@@ -81,53 +76,133 @@ function AdminCards() {
 
         <div className="row">
 
-            <DashboardStats
-                title="Total Leads"
-                value={stats.leads}
-                icon="📋"
-                bgClass="bg-blue"
-                onClick={() =>
-                    navigate(
-                        "/admin/view/leads"
-                    )
-                }
-            />
+            {/* Leads */}
 
-            <DashboardStats
-                title="Managers"
-                value={stats.managers}
-                icon="👨‍💼"
-                bgClass="bg-green"
-                onClick={() =>
-                    navigate(
-                        "/admin/view/managers"
-                    )
-                }
-            />
+            <div className="col-lg-3 col-md-6 mb-4">
 
-            <DashboardStats
-                title="Agents"
-                value={stats.agents}
-                icon="👨‍💻"
-                bgClass="bg-orange"
-                onClick={() =>
-                    navigate(
-                        "/admin/view/agents"
-                    )
-                }
-            />
+                <div className="stats-card bg-blue">
 
-            <DashboardStats
-                title="Properties"
-                value={stats.properties}
-                icon="🏠"
-                bgClass="bg-purple"
-                onClick={() =>
-                    navigate(
-                        "/admin/view/properties"
-                    )
-                }
-            />
+                    <div>
+
+                        <p className="card-label">
+                            Total Leads
+                        </p>
+
+                        <h2 className="card-value">
+                            {stats.leads}
+                        </h2>
+
+                        <span className="card-growth">
+                            ↑ 12% This Month
+                        </span>
+
+                    </div>
+
+                    <div className="stats-icon">
+
+                        <i className="bi bi-person-lines-fill"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {/* Managers */}
+
+            <div className="col-lg-3 col-md-6 mb-4">
+
+                <div className="stats-card bg-green">
+
+                    <div>
+
+                        <p className="card-label">
+                            Managers
+                        </p>
+
+                        <h2 className="card-value">
+                            {stats.managers}
+                        </h2>
+
+                        <span className="card-growth">
+                            Active Team
+                        </span>
+
+                    </div>
+
+                    <div className="stats-icon">
+
+                        <i className="bi bi-people-fill"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {/* Agents */}
+
+            <div className="col-lg-3 col-md-6 mb-4">
+
+                <div className="stats-card bg-orange">
+
+                    <div>
+
+                        <p className="card-label">
+                            Agents
+                        </p>
+
+                        <h2 className="card-value">
+                            {stats.agents}
+                        </h2>
+
+                        <span className="card-growth">
+                            Field Team
+                        </span>
+
+                    </div>
+
+                    <div className="stats-icon">
+
+                        <i className="bi bi-person-badge-fill"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {/* Properties */}
+
+            <div className="col-lg-3 col-md-6 mb-4">
+
+                <div className="stats-card bg-purple">
+
+                    <div>
+
+                        <p className="card-label">
+                            Properties
+                        </p>
+
+                        <h2 className="card-value">
+                            {stats.properties}
+                        </h2>
+
+                        <span className="card-growth">
+                            Listed Properties
+                        </span>
+
+                    </div>
+
+                    <div className="stats-icon">
+
+                        <i className="bi bi-building-fill"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 

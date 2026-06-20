@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.entity.User;
+import com.example.demo.entity.enums.UserRole;
+import com.example.demo.entity.enums.UserStatus;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -18,6 +21,9 @@ public class UserController {
 
     @Autowired
     UserService us;
+    
+    @Autowired
+    UserRepository userRepo;
 
     @PostMapping("/add")
     public User addUser(@RequestBody User user) {
@@ -80,6 +86,48 @@ public class UserController {
     public List<User> getAllAgents() {
 
         return us.getAllAgents();
+    }
+    @PutMapping("/approve/{agentId}/{managerId}")
+    public User approveAgent(
+            @PathVariable UUID agentId,
+            @PathVariable UUID managerId) {
+
+        User agent =
+                us.getUserById(agentId);
+
+        User manager =
+                us.getUserById(managerId);
+
+        agent.setStatus(UserStatus.APPROVED);
+
+        agent.setAssignedManagerId(
+                manager.getUserId());
+
+        agent.setAssignedManagerName(
+                manager.getName());
+
+        return us.updateUser(agentId, agent);
+    }
+    
+    @PutMapping("/reject/{id}")
+    public User rejectAgent(
+            @PathVariable UUID id) {
+
+        User user =
+                us.getUserById(id);
+
+        user.setStatus(
+                UserStatus.REJECTED);
+
+        return us.updateUser(id, user);
+    }
+    
+    @GetMapping("/pending-agents")
+    public List<User> pendingAgents() {
+
+        return userRepo.findByRoleAndStatus(
+                UserRole.AGENT,
+                UserStatus.PENDING);
     }
 }
 

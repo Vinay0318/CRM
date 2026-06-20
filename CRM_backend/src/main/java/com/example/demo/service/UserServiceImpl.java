@@ -31,10 +31,35 @@ public class UserServiceImpl implements UserService {
         if(userRepo.existsByMobile(user.getMobile())) {
             throw new RuntimeException("Mobile Already Exists");
         }
+
+        // Set Manager Name For Agent
+        if(
+            user.getRole() == UserRole.AGENT
+            &&
+            user.getAssignedManagerId() != null
+        ) {
+
+            User manager =
+                userRepo.findById(
+                    user.getAssignedManagerId()
+                ).orElse(null);
+
+            if(manager != null) {
+
+                user.setAssignedManagerName(
+                    manager.getName()
+                );
+
+                user.setAssignedCity(
+                    manager.getAssignedCity()
+                );
+            }
+        }
+
         user.setPassword(
-                passwordEncoder.encode(
-                        user.getPassword()
-                )
+            passwordEncoder.encode(
+                user.getPassword()
+            )
         );
 
         return userRepo.save(user);
@@ -62,7 +87,28 @@ public class UserServiceImpl implements UserService {
             old.setLocation(user.getLocation());
             old.setAssignedCity(user.getAssignedCity());
             old.setAssignedArea(user.getAssignedArea());
-            old.setAssignedManagerId(user.getAssignedManagerId());
+            old.setAssignedManagerId(
+            	    user.getAssignedManagerId()
+            	);
+
+            	if(user.getAssignedManagerId() != null){
+
+            	    User manager =
+            	        userRepo.findById(
+            	            user.getAssignedManagerId()
+            	        ).orElse(null);
+
+            	    if(manager != null){
+
+            	        old.setAssignedManagerName(
+            	            manager.getName()
+            	        );
+
+            	        old.setAssignedCity(
+            	            manager.getAssignedCity()
+            	        );
+            	    }
+            	}
 
             return userRepo.save(old);
         }

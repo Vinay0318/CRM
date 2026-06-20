@@ -1,155 +1,122 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-import "../styles/Admin.css";
-
-import LogoutService from "../services/LogoutService";
-import Swal from "sweetalert2";
+import AdminLayout from "../components/admin/AdminLayout";
 
 import AdminCards from "../components/admin/AdminCards";
 import LeadCharts from "../components/admin/LeadCharts";
 import PropertyChart from "../components/admin/PropertyChart";
 import AdminInsights from "../components/admin/AdminInsights";
+import RecentActivities from "../components/admin/RecentActivities";
+
+import "../styles/Admin.css";
 
 function AdminDashboardPage() {
 
-    const handleLogout = () => {
-
-        Swal.fire({
-            title: "Logout ?",
-            text: "Do you want to logout?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#dc3545",
-            confirmButtonText: "Logout"
-        }).then((result) => {
-
-            if (result.isConfirmed) {
-
-                LogoutService.logout();
-
-            }
-
-        });
-
-    };
-
     return (
 
-        <div className="admin-page">
+        <AdminLayout>
 
             {/* Header */}
 
-            <div className="dashboard-header-card">
+            <div className="dashboard-hero">
 
-                <div>
+    <div>
 
-                    <h2 className="dashboard-title">
-                        🏢 Admin Dashboard
-                    </h2>
+        <div className="hero-icon">
+            📊
+        </div>
 
-                    <h5 className="dashboard-user">
-                        Welcome,
-                        {" "}
-                        {localStorage.getItem("name")}
-                    </h5>
+        <h1>
+            Dashboard
+        </h1>
 
-                    <p className="dashboard-subtitle">
-                        Real Estate CRM Analytics Overview
-                    </p>
+        <p>
+            Welcome back, {localStorage.getItem("name")}
+        </p>
 
-                </div>
+    </div>
 
-                <button
-                    className="btn btn-danger logout-btn"
-                    onClick={handleLogout}
-                >
-                    <i className="bi bi-box-arrow-right me-2"></i>
-                    Logout
-                </button>
-
-            </div>
+</div>
 
             {/* Statistics Cards */}
 
             <AdminCards />
 
-            {/* Quick Actions */}
+            {/* Lead Chart + Activities */}
 
             <div className="row mt-4">
 
-                <div className="col-md-4 mb-3">
+                <div className="col-lg-8">
 
-                    <Link
-                        to="/admin/managers"
-                        className="btn btn-primary w-100 quick-action-btn"
-                    >
-                        <i className="bi bi-people-fill me-2"></i>
+                    <div className="dashboard-card">
 
-                        Manage Managers
-                    </Link>
+                        <h4>
+                            Lead Overview
+                        </h4>
 
-                </div>
+                        <LeadCharts />
 
-                <div className="col-md-4 mb-3">
-
-                    <Link
-                        to="/admin/agents"
-                        className="btn btn-success w-100 quick-action-btn"
-                    >
-                        <i className="bi bi-person-badge-fill me-2"></i>
-
-                        Manage Agents
-                    </Link>
+                    </div>
 
                 </div>
 
-                <div className="col-md-4 mb-3">
+                <div className="col-lg-4">
 
-                    <Link
-                        to="/admin/properties"
-                        className="btn btn-warning w-100 quick-action-btn"
-                    >
-                        <i className="bi bi-building-fill me-2"></i>
+                    <div className="dashboard-card">
 
-                        Manage Properties
-                    </Link>
+                        <h4>
+                            Recent Activities
+                        </h4>
+
+                        <RecentActivities />
+
+                    </div>
 
                 </div>
 
             </div>
 
-            {/* Charts Section */}
+            {/* Property Chart */}
 
             <div className="row mt-4">
 
-                <div className="col-lg-6 mb-4">
+                <div className="col-lg-12">
 
-                    <LeadCharts />
+                    <div className="dashboard-card">
 
-                </div>
+                        <h4>
+                            Property Overview
+                        </h4>
 
-                <div className="col-lg-6 mb-4">
+                        <PropertyChart />
 
-                    <PropertyChart />
+                    </div>
 
                 </div>
 
             </div>
 
-            {/* Business Analytics */}
+            {/* Business Insights */}
 
-            <div className="mt-4">
+            <div className="row mt-4">
 
-                <h4 className="section-title">
-                    📊 Business Insights
-                </h4>
+                <div className="col-lg-12">
 
-                <AdminInsights />
+                    <div className="dashboard-card">
+
+                        <h4>
+                            Business Insights
+                        </h4>
+
+                        <AdminInsights />
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+        </AdminLayout>
 
     );
 }

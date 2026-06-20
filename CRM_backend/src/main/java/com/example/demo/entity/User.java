@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.example.demo.entity.enums.UserRole;
+import com.example.demo.entity.enums.UserStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,15 +43,20 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     // Manager & Agent
     private String assignedCity;
 
     // Agent Only
     private String assignedArea;
+    
 
     // Agent Only
     private UUID assignedManagerId;
+    private String assignedManagerName;
 
     private LocalDateTime createdAt;
 

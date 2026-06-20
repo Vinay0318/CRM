@@ -39,6 +39,12 @@ import ManagersViewPage from "./components/admin/ManagersViewPage";
 import AgentsViewPage from "./components/admin/AgentsViewPage";
 import PropertiesViewPage from "./components/admin/PropertiesViewPage";
 import LeadsViewPage from "./components/admin/LeadsViewPage";
+import AgentRegisterPage
+from "./pages/AgentRegisterPage";
+
+import PendingRequestsPage from "./pages/PendingRequestsPage";
+import StatisticsPage from "./pages/StatisticsPage";
+
 
 import {
 ToastContainer
@@ -181,6 +187,37 @@ element={
 }
 />
 
+<Route
+path="/admin/pending-requests"
+element={
+<ProtectedRoute role="ADMIN">
+<PendingRequestsPage />
+</ProtectedRoute>
+}
+/>
+
+<Route
+path="/admin/statistics"
+element={
+<ProtectedRoute role="ADMIN">
+<StatisticsPage />
+</ProtectedRoute>
+}
+/>
+
+<Route
+path="/agent-register"
+element={<AgentRegisterPage />}
+/>
+
+<Route
+path="/admin/statistics"
+element={
+<ProtectedRoute role="ADMIN">
+<StatisticsPage />
+</ProtectedRoute>
+}
+/>
 </Routes>
 
 <ToastContainer />

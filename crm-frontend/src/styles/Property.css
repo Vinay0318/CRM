@@ -88,3 +88,69 @@
 .sold{
     background:#ef4444;
 }
+
+.property-table-card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.property-search{
+    width:300px;
+}
+
+.property-image{
+    width:60px;
+    height:60px;
+    border-radius:10px;
+    object-fit:cover;
+}
+
+.status-green{
+    background:#dcfce7;
+    color:#166534;
+    padding:6px 12px;
+    border-radius:20px;
+    font-weight:600;
+}
+
+.status-red{
+    background:#fee2e2;
+    color:#991b1b;
+    padding:6px 12px;
+    border-radius:20px;
+    font-weight:600;
+}
+
+.property-table tbody tr:hover{
+    background:#f8fafc;
+}
+
+.property-form-card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.property-btn{
+    background:#4f46e5;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.property-btn:hover{
+    background:#3730a3;
+}

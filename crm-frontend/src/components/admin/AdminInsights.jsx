@@ -5,6 +5,7 @@ import React, {
 
 import LeadService from "../../services/LeadService";
 import PropertyService from "../../services/PropertyService";
+import UserService from "../../services/UserService";
 
 function AdminInsights() {
 
@@ -14,8 +15,9 @@ function AdminInsights() {
         available: 0,
         sold: 0,
         booking: 0,
-        conversion: 0
-
+        conversion: 0,
+        agents: 0,
+        managers: 0
     });
 
     useEffect(() => {
@@ -26,58 +28,80 @@ function AdminInsights() {
 
     const loadData = async () => {
 
-        const leads =
-            (await LeadService.getAllLeads()).data;
+        try {
 
-        const properties =
-            (await PropertyService.getAllProperties()).data;
+            const leads =
+                (await LeadService.getAllLeads()).data;
 
-        const totalValue =
-            properties.reduce(
-                (sum, p) =>
-                    sum + Number(p.price || 0),
-                0
-            );
+            const properties =
+                (await PropertyService.getAllProperties()).data;
 
-        const available =
-            properties.filter(
-                p =>
-                    p.propertyStatus ===
-                    "AVAILABLE"
-            ).length;
+            const agents =
+                (await UserService.getAgents()).data;
 
-        const sold =
-            properties.filter(
-                p =>
-                    p.propertyStatus ===
-                    "SOLD"
-            ).length;
+            const managers =
+                (await UserService.getManagers()).data;
 
-        const booking =
-            leads.filter(
-                l =>
-                    l.status ===
-                    "BOOKING"
-            ).length;
+            const totalValue =
+                properties.reduce(
+                    (sum, p) =>
+                        sum + Number(p.price || 0),
+                    0
+                );
 
-        const conversion =
-            leads.length > 0
-                ? (
-                    (booking /
-                        leads.length) *
-                    100
-                ).toFixed(1)
-                : 0;
+            const available =
+                properties.filter(
+                    p =>
+                        p.propertyStatus ===
+                        "AVAILABLE"
+                ).length;
 
-        setData({
+            const sold =
+                properties.filter(
+                    p =>
+                        p.propertyStatus ===
+                        "SOLD"
+                ).length;
 
-            totalValue,
-            available,
-            sold,
-            booking,
-            conversion
+            const booking =
+                leads.filter(
+                    l =>
+                        l.status ===
+                        "BOOKING"
+                ).length;
 
-        });
+            const conversion =
+                leads.length > 0
+                ?
+                (
+                    booking /
+                    leads.length
+                ) * 100
+                :
+                0;
+
+            setData({
+
+                totalValue,
+                available,
+                sold,
+                booking,
+                conversion:
+                    conversion.toFixed(1),
+
+                agents:
+                    agents.length,
+
+                managers:
+                    managers.length
+            });
+
+        }
+
+        catch(error){
+
+            console.log(error);
+        }
     };
 
     return (
@@ -89,12 +113,11 @@ function AdminInsights() {
                 <div className="insight-card revenue">
 
                     <h6>
-                        Property Value
+                        Total Property Value
                     </h6>
 
                     <h3>
-                        ₹
-                        {data.totalValue.toLocaleString()}
+                        ₹ {data.totalValue.toLocaleString()}
                     </h3>
 
                 </div>
@@ -106,7 +129,7 @@ function AdminInsights() {
                 <div className="insight-card available">
 
                     <h6>
-                        Available
+                        Available Properties
                     </h6>
 
                     <h3>
@@ -122,7 +145,7 @@ function AdminInsights() {
                 <div className="insight-card sold">
 
                     <h6>
-                        Sold
+                        Sold Properties
                     </h6>
 
                     <h3>
@@ -138,11 +161,43 @@ function AdminInsights() {
                 <div className="insight-card conversion">
 
                     <h6>
-                        Conversion Rate
+                        Lead Conversion
                     </h6>
 
                     <h3>
                         {data.conversion}%
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div className="col-md-6 mb-4">
+
+                <div className="insight-card agents">
+
+                    <h6>
+                        Active Agents
+                    </h6>
+
+                    <h3>
+                        {data.agents}
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div className="col-md-6 mb-4">
+
+                <div className="insight-card managers">
+
+                    <h6>
+                        Managers
+                    </h6>
+
+                    <h3>
+                        {data.managers}
                     </h3>
 
                 </div>

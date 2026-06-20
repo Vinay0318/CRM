@@ -4,35 +4,53 @@ function DashboardStats({
     title,
     value,
     icon,
-    bgClass,
-    onClick
+    bgClass
 }) {
 
     return (
 
-        <div
-            className="col-lg-3 col-md-6 mb-4"
-            onClick={onClick}
-            style={{
-                cursor: "pointer"
-            }}
-        >
+        <div className="col-lg-3 col-md-6 mb-4">
 
-            <div
-                className={`stats-card ${bgClass}`}
-            >
+            <div className={`stats-card ${bgClass}`}>
 
                 <div>
 
-                    <h6>{title}</h6>
+                    <p
+                        style={{
+                            marginBottom: "8px",
+                            opacity: "0.9",
+                            fontWeight: "500"
+                        }}
+                    >
+                        {title}
+                    </p>
 
-                    <h2>{value}</h2>
+                    <h2
+                        style={{
+                            fontWeight: "700",
+                            marginBottom: "10px"
+                        }}
+                    >
+                        {value}
+                    </h2>
+
+                    <small
+                        style={{
+                            opacity: "0.8"
+                        }}
+                    >
+                        Updated Today
+                    </small>
 
                 </div>
 
-                <div className="stats-icon">
+                <div>
 
-                    {icon}
+                    <div className="stats-icon">
+
+                        {icon}
+
+                    </div>
 
                 </div>
 

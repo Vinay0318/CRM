@@ -79,6 +79,10 @@ console.log(response.data);
                 response.data.name
             );
             localStorage.setItem(
+                "email",
+                loginData.email
+            );
+            localStorage.setItem(
     "userId",
     response.data.userId
 );
@@ -161,6 +165,10 @@ localStorage.setItem(
             localStorage.setItem(
                 "name",
                 response.data.name
+            );
+            localStorage.setItem(
+                "email",
+                emailOtp
             );
 
             Swal.fire({
@@ -386,14 +394,38 @@ localStorage.setItem(
                             )
                     }
 
-                    <button
-                        className="enquiry-btn"
-                        onClick={() =>
-                            navigate("/enquiry")
-                        }
-                    >
-                        Find Your Dream Property
-                    </button>
+<div className="mt-3 text-center">
+
+<p
+    style={{
+        fontSize: "14px",
+        marginBottom: "15px"
+    }}
+>
+    New Agent?
+
+    <button
+        type="button"
+        className="btn btn-link p-0 ms-1"
+        onClick={() =>
+            navigate("/agent-register")
+        }
+    >
+        Create Account
+    </button>
+
+</p>
+
+<button
+    className="enquiry-btn"
+    onClick={() =>
+        navigate("/enquiry")
+    }
+>
+    Find Your Dream Property
+</button>
+
+</div>
 
                 </div>
 

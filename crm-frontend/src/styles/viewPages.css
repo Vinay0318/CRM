@@ -2,54 +2,46 @@
    PAGE BACKGROUND
 =========================== */
 
-.view-page {
-
-    min-height: 100vh;
-
-    padding: 35px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #f8fafc,
-        #eef2ff,
-        #f1f5f9
-    );
+.view-page{
+    min-height:100vh;
+    padding:35px;
+    background:#f4f7fc;
 }
 
 /* ===========================
    HEADER
 =========================== */
 
-.page-header {
+.page-header{
 
-    display: flex;
+    display:flex;
 
-    justify-content: space-between;
+    justify-content:space-between;
 
-    align-items: center;
+    align-items:center;
 
-    padding: 30px;
+    padding:30px;
 
-    border-radius: 30px;
+    border-radius:30px;
 
-    margin-bottom: 30px;
+    margin-bottom:30px;
 
     background:
     linear-gradient(
         135deg,
-        #2563eb,
+        #0f172a,
+        #1e293b,
         #4f46e5
     );
 
-    color: white;
+    color:white;
 
     box-shadow:
     0 15px 40px rgba(
-        37,
-        99,
-        235,
-        .30
+        15,
+        23,
+        42,
+        .35
     );
 }
 
@@ -181,29 +173,34 @@
    MANAGER CARD
 =========================== */
 
-.manager-card {
+.manager-card{
 
-    background: white;
-
-    border-radius: 28px;
-
-    overflow: hidden;
-
-    cursor: pointer;
-
-    transition: .4s;
-
-    position: relative;
-
-    box-shadow:
-    0 10px 35px rgba(
-        0,
-        0,
-        0,
-        .08
+    background:
+    linear-gradient(
+        180deg,
+        #1e293b,
+        #0f172a
     );
 
-    min-height: 470px;
+    color:white;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    min-height:500px;
+
+    box-shadow:
+    0 15px 40px rgba(
+        15,
+        23,
+        42,
+        .25
+    );
+
+    transition:.3s;
 }
 
 .manager-card:hover {
@@ -268,144 +265,127 @@
 /* ===========================
    AVATAR
 =========================== */
-.manager-avatar {
+.manager-avatar{
 
-    display: flex;
+    position:absolute;
 
-    justify-content: center;
+    top:130px;
 
-    position: relative;
+    left:50%;
 
-    z-index: 10;
+    transform:translate(-50%, -50%);
 
-    margin-top: -65px;
+    z-index:10;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:150px;
 }
-.manager-avatar img {
+.manager-avatar img{
 
-    width: 120px;
+    width:140px;
 
-    height: 120px;
+    height:140px;
 
-    border-radius: 50%;
+    border-radius:50%;
 
-    border: 6px solid #ffffff;
+    border:6px solid white;
 
-    object-fit: cover;
-
-    background: white;
+    object-fit:cover;
 
     box-shadow:
-    0 15px 35px rgba(
-        0,
-        0,
-        0,
-        .18
-    );
+    0 15px 35px rgba(0,0,0,.25);
 }
 
 /* ===========================
    CONTENT
 =========================== */
 
-.manager-content {
+.manager-content{
 
-    text-align: center;
+    text-align:center;
 
     padding:
-    15px
+    95px
     25px
     30px;
 }
 
-.manager-content h4 {
+.manager-content h4{
 
-    font-size: 24px;
+    color:white;
 
-    font-weight: 700;
+    font-size:28px;
 
-    color: #0f172a;
+    font-weight:700;
 
-    margin-bottom: 10px;
+    margin-top:80px;
 }
 
-.manager-content p {
+.manager-content p{
 
-    color: #64748b;
-
-    margin-top: 12px;
-
-    margin-bottom: 10px;
-
-    font-size: 15px;
+    color:#cbd5e1;
 }
 
 /* ===========================
    CITY BADGE
 =========================== */
 
-.city-badge {
-
-    display: inline-block;
-
-    padding: 8px 18px;
-
-    border-radius: 30px;
-
-    font-size: 13px;
-
-    font-weight: 700;
+.city-badge{
 
     background:
-    linear-gradient(
-        135deg,
-        #dbeafe,
-        #bfdbfe
+    rgba(
+        255,
+        255,
+        255,
+        .15
     );
 
-    color: #2563eb;
+    color:white;
 
-    margin-top: 10px;
+    backdrop-filter:
+    blur(10px);
 }
 
 /* ===========================
    VIEW BUTTON
 =========================== */
+.view-btn{
 
-.view-btn {
+    width:100%;
 
-    width: 100%;
+    border:none;
 
-    border: none;
+    padding:14px;
 
-    padding: 14px;
+    border-radius:15px;
 
-    border-radius: 15px;
+    font-size:16px;
 
-    font-size: 16px;
+    font-weight:700;
 
-    font-weight: 700;
-
-    color: white;
+    color:white;
 
     background:
     linear-gradient(
         135deg,
-        #2563eb,
-        #4f46e5
+        #0f172a,
+        #1e293b
     );
 
-    transition: .3s;
+    transition:.3s;
 }
-
-.view-btn:hover {
-
-    transform: scale(1.02);
+.view-btn:hover{
 
     background:
     linear-gradient(
         135deg,
-        #1d4ed8,
-        #4338ca
+        #111827,
+        #334155
     );
 }
 
@@ -518,4 +498,39 @@
     object-fit: cover;
 
     border-radius: 15px;
+}
+
+.status-badge{
+
+    display:inline-block;
+
+    padding:8px 16px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    margin-top:10px;
+}
+
+.status-badge.NEW{
+    background:#2563eb;
+    color:white;
+}
+
+.status-badge.CONTACTED{
+    background:#10b981;
+    color:white;
+}
+
+.status-badge.INTERESTED{
+    background:#f59e0b;
+    color:white;
+}
+
+.status-badge.BOOKING{
+    background:#ef4444;
+    color:white;
 }

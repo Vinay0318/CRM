@@ -1,18 +1,24 @@
-import React, {
+import React,
+{
     useEffect,
     useState
-} from "react";
+}
+from "react";
 
 import UserService
 from "../../services/UserService";
-import Swal from "sweetalert2";
+
+import Swal
+from "sweetalert2";
 
 function ManagerTable() {
 
-    const [managers, setManagers] =
+    const [managers,
+        setManagers] =
         useState([]);
 
-    const [search, setSearch] =
+    const [search,
+        setSearch] =
         useState("");
 
     useEffect(() => {
@@ -21,42 +27,118 @@ function ManagerTable() {
 
     }, []);
 
-    const loadManagers = async () => {
+    const loadManagers =
+        async () => {
 
-        const response =
-            await UserService.getManagers();
+            try {
 
-        setManagers(response.data);
-    };
+                const response =
+                    await UserService.getManagers();
 
-    const deleteManager = async (id) => {
-
-        Swal.fire({
-            title: "Delete Manager?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#dc3545"
-        }).then(async (result) => {
-    
-            if(result.isConfirmed){
-    
-                await UserService.deleteUser(id);
-    
-                Swal.fire(
-                    "Deleted!",
-                    "Manager Removed",
-                    "success"
+                setManagers(
+                    response.data
                 );
-    
-                loadManagers();
+
+            } catch(error){
+
+                console.log(error);
             }
-        });
-    };
+        };
+
+    const deleteManager =
+        async (id) => {
+
+            Swal.fire({
+
+                title:
+                    "Delete Manager?",
+
+                text:
+                    "This action cannot be undone",
+
+                icon:
+                    "warning",
+
+                showCancelButton:
+                    true,
+
+                confirmButtonColor:
+                    "#dc3545"
+
+            }).then(
+                async(result)=>{
+
+                    if(result.isConfirmed){
+
+                        await UserService
+                            .deleteUser(id);
+
+                        Swal.fire(
+                            "Deleted!",
+                            "Manager Removed",
+                            "success"
+                        );
+
+                        loadManagers();
+                    }
+                }
+            );
+        };
+
+    const viewManager =
+        (manager) => {
+
+            Swal.fire({
+
+                title:
+                    manager.name,
+
+                html: `
+
+                    <div style="text-align:left">
+
+                        <p>
+                        <b>Email:</b>
+                        ${manager.email}
+                        </p>
+
+                        <p>
+                        <b>Mobile:</b>
+                        ${manager.mobile}
+                        </p>
+
+                        <p>
+                        <b>Assigned City:</b>
+                        ${manager.assignedCity || "-"}
+                        </p>
+
+                        <p>
+                        <b>Location:</b>
+                        ${manager.location || "-"}
+                        </p>
+
+                    </div>
+
+                `,
+
+                width:600
+            });
+        };
 
     const filteredManagers =
-        managers.filter((manager) =>
-            manager.name
-                .toLowerCase()
+        managers.filter(
+            (manager)=>
+
+                manager.name
+                ?.toLowerCase()
+                .includes(
+                    search.toLowerCase()
+                )
+
+                ||
+
+                manager.email
+                ?.toLowerCase()
                 .includes(
                     search.toLowerCase()
                 )
@@ -66,18 +148,37 @@ function ManagerTable() {
 
         <div className="manager-table-card">
 
-            <div className="d-flex justify-content-between mb-3">
+            <div
+                className="d-flex
+                justify-content-between
+                align-items-center
+                mb-4"
+            >
 
-                <h4>
-                    Managers
-                </h4>
+                <div>
+
+                    <h4>
+                        Managers
+                    </h4>
+
+                    <small
+                        style={{
+                            color:"#94a3b8"
+                        }}
+                    >
+                        Total Managers :
+                        {" "}
+                        {filteredManagers.length}
+                    </small>
+
+                </div>
 
                 <input
                     type="text"
-                   className="form-control manager-search"
-                    placeholder="Search..."
+                    className="form-control manager-search"
+                    placeholder="Search Manager..."
                     value={search}
-                    onChange={(e) =>
+                    onChange={(e)=>
                         setSearch(
                             e.target.value
                         )
@@ -86,76 +187,117 @@ function ManagerTable() {
 
             </div>
 
-            <table className="table table-hover manager-table">
+            <div className="table-responsive">
 
-                <thead>
+                <table
+                    className="
+                    table
+                    table-hover
+                    manager-table"
+                >
 
-                    <tr>
+                    <thead>
 
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Mobile</th>
-                        <th>City</th>
-                        <th>Actions</th>
+                        <tr>
 
-                    </tr>
+                            <th>Name</th>
 
-                </thead>
+                            <th>Email</th>
 
-                <tbody>
+                            <th>Mobile</th>
 
-                    {
-                        filteredManagers.map(
-                            (manager) => (
+                            <th>Assigned City</th>
 
-                                <tr
-                                    key={
-                                        manager.userId
-                                    }
-                                >
+                            <th>Actions</th>
 
-                                    <td>
-                                        {manager.name}
-                                    </td>
+                        </tr>
 
-                                    <td>
-                                        {manager.email}
-                                    </td>
+                    </thead>
 
-                                    <td>
-                                        {manager.mobile}
-                                    </td>
+                    <tbody>
 
-                                    <td>
-                                        {
-                                            manager.assignedCity
+                        {
+                            filteredManagers.map(
+                                (manager)=>(
+
+                                    <tr
+                                        key={
+                                            manager.userId
                                         }
-                                    </td>
+                                    >
 
-                                    <td>
+                                        <td>
+                                            {manager.name}
+                                        </td>
 
-                                        <button
-                                            className="manager-delete-btn"
-                                            onClick={() =>
-                                                deleteManager(
-                                                    manager.userId
-                                                )
+                                        <td>
+                                            {manager.email}
+                                        </td>
+
+                                        <td>
+                                            {manager.mobile}
+                                        </td>
+
+                                        <td>
+                                            {
+                                                manager.assignedCity
                                             }
-                                        >
-                                            Delete
-                                        </button>
+                                        </td>
 
-                                    </td>
+                                        <td>
 
-                                </tr>
+                                            <button
+                                                className="
+                                                btn
+                                                btn-info
+                                                btn-sm
+                                                me-2"
+                                                onClick={()=>
+                                                    viewManager(
+                                                        manager
+                                                    )
+                                                }
+                                            >
+                                                <i className="bi bi-eye"></i>
+                                            </button>
 
+                                            <button
+                                                className="
+                                                btn
+                                                btn-warning
+                                                btn-sm
+                                                me-2"
+                                            >
+                                                <i className="bi bi-pencil-square"></i>
+                                            </button>
+
+                                            <button
+                                                className="
+                                                btn
+                                                btn-danger
+                                                btn-sm"
+                                                onClick={()=>
+                                                    deleteManager(
+                                                        manager.userId
+                                                    )
+                                                }
+                                            >
+                                                <i className="bi bi-trash"></i>
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                )
                             )
-                        )
-                    }
+                        }
 
-                </tbody>
+                    </tbody>
 
-            </table>
+                </table>
+
+            </div>
 
         </div>
 

@@ -42,7 +42,7 @@ function PropertyTable() {
 
             }
 
-            catch(error) {
+            catch(error){
 
                 console.log(error);
             }
@@ -66,7 +66,7 @@ function PropertyTable() {
                     "#dc3545"
 
             }).then(
-                async(result) => {
+                async(result)=>{
 
                     if(
                         result.isConfirmed
@@ -99,50 +99,76 @@ function PropertyTable() {
 
                 <div style="text-align:left">
 
-                <p>
-                <b>Type:</b>
-                ${property.type}
-                </p>
+                    <p>
+                    <b>Type:</b>
+                    ${property.type}
+                    </p>
 
-                <p>
-                <b>Price:</b>
-                ₹ ${property.price}
-                </p>
+                    <p>
+                    <b>Price:</b>
+                    ₹ ${property.price}
+                    </p>
 
-                <p>
-                <b>Location:</b>
-                ${property.location}
-                </p>
+                    <p>
+                    <b>Location:</b>
+                    ${property.location}
+                    </p>
 
-                <p>
-                <b>Area:</b>
-                ${property.areaSqft}
-                Sqft
-                </p>
+                    <p>
+                    <b>Area:</b>
+                    ${property.areaSqft} Sqft
+                    </p>
 
-                <p>
-                <b>Builder:</b>
-                ${property.builderName}
-                </p>
+                    <p>
+                    <b>Builder:</b>
+                    ${property.builderName}
+                    </p>
 
-                <p>
-                <b>Status:</b>
-                ${property.propertyStatus}
-                </p>
+                    <p>
+                    <b>Status:</b>
+                    ${property.propertyStatus}
+                    </p>
 
-                <p>
-                <b>Description:</b>
-                ${property.description}
-                </p>
+                    <p>
+                    <b>Description:</b>
+                    ${property.description}
+                    </p>
 
                 </div>
 
                 `,
 
-                width: 700,
+                width: 700
+            });
+        };
 
-                confirmButtonText:
-                    "Close"
+    const viewImage =
+        (property) => {
+
+            if(
+                !property.imageUrl
+            ){
+
+                Swal.fire(
+                    "No Image Found"
+                );
+
+                return;
+            }
+
+            Swal.fire({
+
+                title:
+                    property.name,
+
+                imageUrl:
+                    property.imageUrl,
+
+                imageWidth:
+                    700,
+
+                imageAlt:
+                    "Property Image"
 
             });
         };
@@ -162,9 +188,8 @@ function PropertyTable() {
                     "_blank"
 
                 );
-            }
 
-            else {
+            }else{
 
                 Swal.fire({
 
@@ -180,42 +205,34 @@ function PropertyTable() {
 
     const filteredProperties =
         properties.filter(
-            (property) => {
+            (property)=>{
 
-                const searchText =
+                const txt =
                     search.toLowerCase();
 
                 return (
 
                     property.name
                     ?.toLowerCase()
-                    .includes(
-                        searchText
-                    )
+                    .includes(txt)
 
                     ||
 
                     property.location
                     ?.toLowerCase()
-                    .includes(
-                        searchText
-                    )
+                    .includes(txt)
 
                     ||
 
                     property.builderName
                     ?.toLowerCase()
-                    .includes(
-                        searchText
-                    )
+                    .includes(txt)
 
                     ||
 
                     property.type
                     ?.toLowerCase()
-                    .includes(
-                        searchText
-                    )
+                    .includes(txt)
 
                 );
             }
@@ -225,167 +242,164 @@ function PropertyTable() {
 
         <div className="property-table-card">
 
-            <div className="d-flex justify-content-between mb-3">
+            <div className="table-header">
 
                 <h4>
                     Properties
+                    (
+                    {filteredProperties.length}
+                    )
                 </h4>
 
                 <input
-
                     type="text"
-
-                    className=
-                    "form-control property-search"
-
-                    placeholder=
-                    "Search Name, Location, Builder"
-
+                    className="form-control property-search"
+                    placeholder="Search Property..."
                     value={search}
-
                     onChange={(e)=>
                         setSearch(
                             e.target.value
                         )
                     }
-
                 />
 
             </div>
 
-            <table
-                className=
-                "table table-hover"
-            >
+            <div className="table-responsive">
 
-                <thead>
+                <table className="table property-table">
 
-                    <tr>
+                    <thead>
 
-                        <th>Name</th>
+                        <tr>
 
-                        <th>Type</th>
+                            <th>Name</th>
 
-                        <th>Price</th>
+                            <th>Type</th>
 
-                        <th>Location</th>
+                            <th>Price</th>
 
-                        <th>Status</th>
+                            <th>Location</th>
 
-                        <th>
-                            Actions
-                        </th>
+                            <th>Status</th>
 
-                    </tr>
+                            <th>Actions</th>
 
-                </thead>
+                        </tr>
 
-                <tbody>
+                    </thead>
 
-                    {
+                    <tbody>
 
-                        filteredProperties
-                        .map(
-                            (property)=>(
+                        {
+                            filteredProperties.map(
+                                (property)=>(
 
-                                <tr
-                                    key={
-                                        property.propertyId
-                                    }
-                                >
-
-                                    <td>
-                                        {
-                                            property.name
+                                    <tr
+                                        key={
+                                            property.propertyId
                                         }
-                                    </td>
+                                    >
 
-                                    <td>
-                                        {
-                                            property.type
-                                        }
-                                    </td>
+                                        <td>
+                                            {property.name}
+                                        </td>
 
-                                    <td>
-                                        ₹
-                                        {
-                                            property.price
-                                        }
-                                    </td>
+                                        <td>
+                                            {property.type}
+                                        </td>
 
-                                    <td>
-                                        {
-                                            property.location
-                                        }
-                                    </td>
+                                        <td>
+                                            ₹ {property.price}
+                                        </td>
 
-                                    <td>
+                                        <td>
+                                            {property.location}
+                                        </td>
 
-                                        <span
-                                        className={`status-badge ${property.propertyStatus.toLowerCase()}`}
-                                        >
+                                        <td>
 
-                                            {
-                                                property.propertyStatus
-                                            }
+                                            <span
+                                                className={
+                                                    property.propertyStatus === "AVAILABLE"
+                                                    ?
+                                                    "badge bg-success"
+                                                    :
+                                                    "badge bg-danger"
+                                                }
+                                            >
+                                                {
+                                                    property.propertyStatus
+                                                }
+                                            </span>
 
-                                        </span>
+                                        </td>
 
-                                    </td>
+                                        <td>
 
-                                    <td>
+                                            <button
+                                                className="btn btn-info btn-sm me-2"
+                                                onClick={()=>
+                                                    viewProperty(
+                                                        property
+                                                    )
+                                                }
+                                            >
+                                                <i className="bi bi-eye"></i>
+                                            </button>
 
-                                        <button
-                                            className=
-                                            "btn btn-info btn-sm me-2"
+                                            <button
+                                                className="btn btn-primary btn-sm me-2"
+                                                onClick={()=>
+                                                    viewImage(
+                                                        property
+                                                    )
+                                                }
+                                            >
+                                                <i className="bi bi-image"></i>
+                                            </button>
 
-                                            onClick={()=>
-                                                viewProperty(
-                                                    property
-                                                )
-                                            }
-                                        >
-                                            View
-                                        </button>
+                                            <button
+                                                className="btn btn-warning btn-sm me-2"
+                                            >
+                                                <i className="bi bi-pencil-square"></i>
+                                            </button>
 
-                                        <button
-                                            className=
-                                            "btn btn-success btn-sm me-2"
+                                            <button
+                                                className="btn btn-success btn-sm me-2"
+                                                onClick={()=>
+                                                    openMap(
+                                                        property
+                                                    )
+                                                }
+                                            >
+                                                <i className="bi bi-geo-alt-fill"></i>
+                                            </button>
 
-                                            onClick={()=>
-                                                openMap(
-                                                    property
-                                                )
-                                            }
-                                        >
-                                            Map
-                                        </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={()=>
+                                                    deleteProperty(
+                                                        property.propertyId
+                                                    )
+                                                }
+                                            >
+                                                <i className="bi bi-trash"></i>
+                                            </button>
 
-                                        <button
-                                            className=
-                                            "btn btn-danger btn-sm"
+                                        </td>
 
-                                            onClick={()=>
-                                                deleteProperty(
-                                                    property.propertyId
-                                                )
-                                            }
-                                        >
-                                            Delete
-                                        </button>
+                                    </tr>
 
-                                    </td>
-
-                                </tr>
-
+                                )
                             )
-                        )
+                        }
 
-                    }
+                    </tbody>
 
-                </tbody>
+                </table>
 
-            </table>
+            </div>
 
         </div>
     );
