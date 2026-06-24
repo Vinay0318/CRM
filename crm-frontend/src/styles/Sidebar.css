@@ -1,11 +1,11 @@
-.sidebar {
+.sidebar{
 
+    width:280px;
+    min-width:280px;
     height:100vh;
 
-    overflow:hidden;
-
-    position:sticky;
-
+    position:fixed;
+    left:0;
     top:0;
 
     background:
@@ -15,15 +15,13 @@
             #18263d
         );
 
-    padding: 18px;
+    padding:18px;
 
-    display: flex;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
 
-    flex-direction: column;
-
-    justify-content: space-between;
-
-    overflow: hidden;
+    z-index:999;
 }
 
 /* HEADER */

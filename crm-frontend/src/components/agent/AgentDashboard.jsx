@@ -16,14 +16,11 @@ import {
     YAxis
 } from "recharts";
 
-import FollowUpService
-from "../../services/FollowUpService";
+import FollowUpService from "../../services/FollowUpService";
 
-import SiteVisitService
-from "../../services/SiteVisitService";
+import SiteVisitService from "../../services/SiteVisitService";
 
-import LeadService
-from "../../services/LeadService";
+import LeadService from "../../services/LeadService";
 
 function AgentDashboard() {
 

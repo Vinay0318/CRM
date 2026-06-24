@@ -5,7 +5,7 @@ import AgentDashboard from "../components/agent/AgentDashboard";
 import AgentLeads from "../components/agent/AgentLeads";
 import FollowUpPage from "../components/agent/FollowUpPage";
 import SiteVisitPage from "../components/agent/SiteVisitPage";
-import LeadNotesPage from "../components/agent/LeadNotesPage";
+import LeadNotesPage from "../components/agent/LeaadNotesPage";
 import AgentStatistics from "../components/agent/AgentStatistics";
 
 function AgentPage() {
@@ -23,25 +23,36 @@ function AgentPage() {
             />
 
             <div className="dashboard-content">
-            {
-    activeTab === "followups" &&
-    <FollowUpPage />
-}
 
-{
-    activeTab === "visits" &&
-    <SiteVisitPage />
-}
+                {
+                    activeTab === "dashboard" &&
+                    <AgentDashboard />
+                }
 
-{
-    activeTab === "notes" &&
-    <LeadNotesPage />
-}
+                {
+                    activeTab === "leads" &&
+                    <AgentLeads />
+                }
 
-{
-    activeTab === "stats" &&
-    <AgentStatistics />
-}
+                {
+                    activeTab === "followups" &&
+                    <FollowUpPage />
+                }
+
+                {
+                    activeTab === "visits" &&
+                    <SiteVisitPage />
+                }
+
+                {
+                    activeTab === "notes" &&
+                    <LeadNotesPage />
+                }
+
+                {
+                    activeTab === "stats" &&
+                    <AgentStatistics />
+                }
 
             </div>
 

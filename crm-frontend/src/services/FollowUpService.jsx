@@ -5,6 +5,13 @@ const BASE_URL =
 
 class FollowUpService {
 
+    getByAgent(agentId) {
+
+        return api.get(
+            `${BASE_URL}/agent/${agentId}`
+        );
+    }
+
     getAll(agentId) {
 
         return api.get(
@@ -20,7 +27,7 @@ class FollowUpService {
         );
     }
 
-    update(id, data) {
+    update(id,data) {
 
         return api.put(
             `${BASE_URL}/update/${id}`,
@@ -28,6 +35,18 @@ class FollowUpService {
         );
     }
 
+    delete(id) {
+
+        return api.delete(
+            `${BASE_URL}/delete/${id}`
+        );
+    }
+    getByAgent(agentId) {
+
+        return api.get(
+            `${BASE_URL}/agent/${agentId}`
+        );
+    }
 }
 
 export default new FollowUpService();
