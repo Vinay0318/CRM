@@ -1,51 +1,51 @@
-import LeadCard from "../leads/LeadCard";
+// import LeadCard from "../leads/LeadCard";
 
-function AssignedLeads({
-    leads,
-    onSelect
-}) {
+// function AssignedLeads({
+//     leads,
+//     onSelect
+// }) {
 
-    const assignedLeads =
-        leads.filter(
-            lead =>
-            lead.status !== "NEW"
-        );
+//     const assignedLeads =
+//         leads.filter(
+//             lead =>
+//             lead.status !== "NEW"
+//         );
 
-    return (
+//     return (
 
-        <>
+//         <>
 
-            <h5 className="section-heading mt-4">
-                Assigned Leads
-            </h5>
+//             <h5 className="section-heading mt-4">
+//                 Assigned Leads
+//             </h5>
 
-            {
+//             {
 
-                assignedLeads.map(
-                    (lead,index) => (
+//                 assignedLeads.map(
+//                     (lead,index) => (
 
-                        <LeadCard
+//                         <LeadCard
 
-                            key={
-                                lead.Leadid ||
-                                lead.leadid ||
-                                index
-                            }
+//                             key={
+//                                 lead.Leadid ||
+//                                 lead.leadid ||
+//                                 index
+//                             }
 
-                            lead={lead}
+//                             lead={lead}
 
-                            onSelect={onSelect}
+//                             onSelect={onSelect}
 
-                        />
+//                         />
 
-                    )
-                )
+//                     )
+//                 )
 
-            }
+//             }
 
-        </>
+//         </>
 
-    );
-}
+//     );
+// }
 
-export default AssignedLeads;
+// export default AssignedLeads;

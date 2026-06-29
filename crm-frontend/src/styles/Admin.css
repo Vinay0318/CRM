@@ -1412,3 +1412,18 @@ PROPERTY TABLE CARD
     box-shadow:0 0 0 3px rgba(108,99,255,.15);
 
 }
+
+.stats-title{
+    margin-bottom:8px;
+    opacity:.9;
+    font-weight:500;
+}
+
+.stats-value{
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.stats-subtitle{
+    opacity:.8;
+}

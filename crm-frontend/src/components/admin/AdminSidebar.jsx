@@ -1,15 +1,53 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
+
 import LogoutService from "../../services/LogoutService";
 
 function AdminSidebar() {
 
     const location = useLocation();
 
-    const isActive = (path) => {
-        return location.pathname === path
+    const name =
+        localStorage.getItem("name");
+
+    const email =
+        localStorage.getItem("email");
+
+    const isActive = (path) =>
+
+        location.pathname === path
+
             ? "sidebar-link active"
+
             : "sidebar-link";
+
+    const handleLogout = () => {
+
+        Swal.fire({
+
+            title: "Logout?",
+
+            text: "Do you want to logout?",
+
+            icon: "question",
+
+            showCancelButton: true,
+
+            confirmButtonText: "Logout",
+
+            confirmButtonColor: "#dc3545"
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                LogoutService.logout();
+
+            }
+
+        });
+
     };
 
     return (
@@ -21,30 +59,38 @@ function AdminSidebar() {
             <div className="sidebar-logo">
 
                 <h2>
+
                     🏢 eState CRM
+
                 </h2>
 
             </div>
 
-            {/* User Info */}
+            {/* Admin Information */}
 
             <div className="sidebar-user-card">
 
                 <h5>
-                    {localStorage.getItem("name")}
+
+                    {name}
+
                 </h5>
 
                 <p>
+
                     ADMIN
+
                 </p>
 
                 <small>
-                    {localStorage.getItem("email")}
+
+                    {email}
+
                 </small>
 
             </div>
 
-            {/* Menu */}
+            {/* Navigation */}
 
             <div className="sidebar-menu">
 
@@ -96,14 +142,6 @@ function AdminSidebar() {
                     Statistics
                 </Link>
 
-                <Link
-                    to="/admin/pending-requests"
-                    className={isActive("/admin/pending-requests")}
-                >
-                    <i className="bi bi-clock-history"></i>
-                    Pending Requests
-                </Link>
-
             </div>
 
             {/* Logout */}
@@ -112,18 +150,21 @@ function AdminSidebar() {
 
                 <button
                     className="logout-btn-sidebar"
-                    onClick={() =>
-                        LogoutService.logout()
-                    }
+                    onClick={handleLogout}
                 >
+
                     <i className="bi bi-box-arrow-right"></i>
+
                     Logout
+
                 </button>
 
             </div>
 
         </div>
+
     );
+
 }
 
 export default AdminSidebar;

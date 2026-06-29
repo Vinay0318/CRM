@@ -1,77 +1,56 @@
 import React from "react";
 
+import LeadCharts from "./LeadCharts";
+import PropertyChart from "./PropertyChart";
+import ManagerChart from "./ManagerChart";
+import AdminInsights from "../admin/AdminInsights";
+
 function ManagerStats() {
 
     return (
 
-        <div className="row">
+        <>
 
-            <div className="col-md-3">
+            {/* Top Insights */}
 
-                <div className="card shadow">
+            <div className="mb-4">
 
-                    <div className="card-body">
+                <AdminInsights />
 
-                        <h6>Total Leads</h6>
+            </div>
 
-                        <h3>0</h3>
+            {/* Charts */}
 
-                    </div>
+            <div className="row">
+
+                <div className="col-lg-8 mb-4">
+
+                    <LeadCharts />
+
+                </div>
+
+                <div className="col-lg-4 mb-4">
+
+                    <PropertyChart />
 
                 </div>
 
             </div>
 
-            <div className="col-md-3">
+            <div className="row">
 
-                <div className="card shadow">
+                <div className="col-lg-12">
 
-                    <div className="card-body">
-
-                        <h6>New Leads</h6>
-
-                        <h3>0</h3>
-
-                    </div>
+                    <ManagerChart />
 
                 </div>
 
             </div>
 
-            <div className="col-md-3">
+        </>
 
-                <div className="card shadow">
-
-                    <div className="card-body">
-
-                        <h6>Interested</h6>
-
-                        <h3>0</h3>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div className="col-md-3">
-
-                <div className="card shadow">
-
-                    <div className="card-body">
-
-                        <h6>Booked</h6>
-
-                        <h3>0</h3>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
     );
+
 }
 
-export default ManagerStats;
+export default React.memo(ManagerStats);

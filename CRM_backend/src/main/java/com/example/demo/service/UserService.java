@@ -1,34 +1,34 @@
 package com.example.demo.service;
 
-
 import java.util.List;
 import java.util.UUID;
 
+import com.example.demo.dto.UserResponseDto;
 import com.example.demo.entity.User;
-
 
 public interface UserService {
 
-    User addUser(User user);
+    UserResponseDto addManager(User user);
 
-    User updateUser(UUID id, User user);
+    UserResponseDto addAgent(User user);
+
+    UserResponseDto updateUser(UUID id, User user);
 
     String deleteUser(UUID id);
 
-    User getUserById(UUID id);
+    UserResponseDto getUserById(UUID id);
 
-    User getUserByName(String name);
+    UserResponseDto getUserByName(String name);
 
-    List<User> getAllUsers();
+    List<UserResponseDto> getAllUsers();
 
-    List<User> getByAssignedCity(String city);
+    List<UserResponseDto> getByAssignedCity(String city);
 
-    List<User> getByAssignedArea(String area);
+    List<UserResponseDto> getByAssignedArea(String area);
 
-    List<User> getAgentsByManager(UUID managerId);
+    List<UserResponseDto> getAgentsByManager(UUID managerId);
 
-    List<User> getAllManagers();
+    List<UserResponseDto> getAllManagers();
 
-    List<User> getAllAgents();
+    List<UserResponseDto> getAllAgents();
 }
-

@@ -1,45 +1,99 @@
-import React, { useState } from "react";
-import PropertyService from "../../services/PropertyService";
-import Swal from "sweetalert2";
+import React, {
+    useState
+} from "react";
+
+import PropertyService
+from "../../services/PropertyService";
+
+import Swal
+from "sweetalert2";
 
 function PropertyForm({ loadProperties }) {
 
-    const [property, setProperty] = useState({
+    const [loading,
+        setLoading] =
+        useState(false);
 
-        name: "",
-        price: "",
-        type: "APARTMENT",
-        location: "",
-        areaSqft: "",
-        builderName: "",
-        imageUrl: "",
-        propertyStatus: "AVAILABLE",
-        description: "",
-        latitude: "",
-        longitude: ""
+    const [property,
+        setProperty] =
+        useState({
 
-    });
+            name: "",
+
+            price: "",
+
+            type: "APARTMENT",
+
+            location: "",
+
+            areaSqft: "",
+
+            builderName: "",
+
+            imageUrl: "",
+
+            propertyStatus: "AVAILABLE",
+
+            description: "",
+
+            latitude: "",
+
+            longitude: ""
+
+        });
+
+    // ===========================
+    // Handle Input Change
+    // ===========================
 
     const handleChange = (e) => {
 
-        setProperty({
+        setProperty(prev => ({
 
-            ...property,
+            ...prev,
 
             [e.target.name]:
                 e.target.value
 
-        });
+        }));
+
     };
+
+    // ===========================
+    // Submit Property
+    // ===========================
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
+        setLoading(true);
+
         try {
 
+            const payload = {
+
+                ...property,
+
+                name:
+                    property.name.trim(),
+
+                location:
+                    property.location.trim(),
+
+                builderName:
+                    property.builderName.trim(),
+
+                imageUrl:
+                    property.imageUrl.trim(),
+
+                description:
+                    property.description.trim()
+
+            };
+
             await PropertyService.addProperty(
-                property
+                payload
             );
 
             Swal.fire({
@@ -60,15 +114,25 @@ function PropertyForm({ loadProperties }) {
             setProperty({
 
                 name: "",
+
                 price: "",
+
                 type: "APARTMENT",
+
                 location: "",
+
                 areaSqft: "",
+
                 builderName: "",
+
                 imageUrl: "",
+
                 propertyStatus: "AVAILABLE",
+
                 description: "",
+
                 latitude: "",
+
                 longitude: ""
 
             });
@@ -76,11 +140,14 @@ function PropertyForm({ loadProperties }) {
             if (loadProperties) {
 
                 loadProperties();
+
             }
 
         }
 
         catch (error) {
+
+            console.error(error);
 
             Swal.fire({
 
@@ -89,11 +156,23 @@ function PropertyForm({ loadProperties }) {
                 title: "Error",
 
                 text:
+
+                    error.response?.data?.message ||
+
                     error.response?.data ||
-                    "Error Adding Property"
+
+                    "Unable to add property."
 
             });
+
         }
+
+        finally {
+
+            setLoading(false);
+
+        }
+
     };
 
     return (
@@ -103,21 +182,35 @@ function PropertyForm({ loadProperties }) {
             <div className="d-flex justify-content-between align-items-center mb-4">
 
                 <h4>
+
                     Add New Property
+
                 </h4>
 
                 <button
+
                     type="button"
+
                     className="btn btn-success"
+
                     onClick={() =>
+
                         window.open(
-                            "https://www.google.com/maps",
+
+                            process.env.REACT_APP_GOOGLE_MAPS_URL,
+
                             "_blank"
+
                         )
+
                     }
+
                 >
+
                     <i className="bi bi-geo-alt-fill me-2"></i>
+
                     Open Google Maps
+
                 </button>
 
             </div>
@@ -125,269 +218,475 @@ function PropertyForm({ loadProperties }) {
             <form onSubmit={handleSubmit}>
 
                 <div className="row">
+                    {/* Property Name */}
 
-                    <div className="col-md-6 mb-3">
+<div className="col-md-6 mb-3">
 
-                        <label className="form-label">
-                            Property Name
-                        </label>
+    <label className="form-label">
 
-                        <input
-                            type="text"
-                            name="name"
-                            className="form-control"
-                            placeholder="Enter Property Name"
-                            value={property.name}
-                            onChange={handleChange}
-                            required
-                        />
+        Property Name
 
-                    </div>
+    </label>
 
-                    <div className="col-md-6 mb-3">
+    <input
 
-                        <label className="form-label">
-                            Price
-                        </label>
+        type="text"
 
-                        <input
-                            type="number"
-                            name="price"
-                            className="form-control"
-                            placeholder="Enter Price"
-                            value={property.price}
-                            onChange={handleChange}
-                            required
-                        />
+        name="name"
 
-                    </div>
+        className="form-control"
 
-                    <div className="col-md-6 mb-3">
+        placeholder="Enter Property Name"
 
-                        <label className="form-label">
-                            Property Type
-                        </label>
+        value={property.name}
 
-                        <select
-                            name="type"
-                            className="form-select"
-                            value={property.type}
-                            onChange={handleChange}
-                        >
+        onChange={handleChange}
 
-                            <option value="APARTMENT">
-                                Apartment
-                            </option>
+        required
 
-                            <option value="VILLA">
-                                Villa
-                            </option>
+    />
 
-                            <option value="PLOT">
-                                Plot
-                            </option>
+</div>
 
-                            <option value="COMMERCIAL">
-                                Commercial
-                            </option>
+{/* Price */}
 
-                        </select>
+<div className="col-md-6 mb-3">
 
-                    </div>
+    <label className="form-label">
 
-                    <div className="col-md-6 mb-3">
+        Price
 
-                        <label className="form-label">
-                            Location
-                        </label>
+    </label>
 
-                        <input
-                            type="text"
-                            name="location"
-                            className="form-control"
-                            placeholder="Property Location"
-                            value={property.location}
-                            onChange={handleChange}
-                        />
+    <input
 
-                    </div>
+        type="number"
 
-                    <div className="col-md-6 mb-3">
+        name="price"
 
-                        <label className="form-label">
-                            Area (Sq Ft)
-                        </label>
+        className="form-control"
 
-                        <input
-                            type="number"
-                            name="areaSqft"
-                            className="form-control"
-                            placeholder="Area in Sqft"
-                            value={property.areaSqft}
-                            onChange={handleChange}
-                        />
+        placeholder="Enter Price"
 
-                    </div>
+        value={property.price}
 
-                    <div className="col-md-6 mb-3">
+        onChange={handleChange}
 
-                        <label className="form-label">
-                            Builder Name
-                        </label>
+        min="1"
 
-                        <input
-                            type="text"
-                            name="builderName"
-                            className="form-control"
-                            placeholder="Builder Name"
-                            value={property.builderName}
-                            onChange={handleChange}
-                        />
+        required
 
-                    </div>
+    />
 
-                    <div className="col-md-12 mb-3">
+</div>
 
-                        <label className="form-label">
-                            Property Image URL
-                        </label>
+{/* Property Type */}
 
-                        <input
-                            type="text"
-                            name="imageUrl"
-                            className="form-control"
-                            placeholder="Paste Image URL"
-                            value={property.imageUrl}
-                            onChange={handleChange}
-                        />
+<div className="col-md-6 mb-3">
 
-                    </div>
+    <label className="form-label">
 
-                    {
-                        property.imageUrl && (
+        Property Type
 
-                            <div className="col-md-12 mb-3 text-center">
+    </label>
 
-                                <img
-                                    src={property.imageUrl}
-                                    alt="Property Preview"
-                                    style={{
-                                        width: "300px",
-                                        height: "180px",
-                                        objectFit: "cover",
-                                        borderRadius: "15px",
-                                        border: "1px solid #ddd"
-                                    }}
-                                />
+    <select
 
-                            </div>
-                        )
-                    }
+        name="type"
 
-                    <div className="col-md-6 mb-3">
+        className="form-select"
 
-                        <label className="form-label">
-                            Latitude
-                        </label>
+        value={property.type}
 
-                        <input
-                            type="number"
-                            step="any"
-                            name="latitude"
-                            className="form-control"
-                            placeholder="18.5204"
-                            value={property.latitude}
-                            onChange={handleChange}
-                        />
+        onChange={handleChange}
 
-                    </div>
+    >
 
-                    <div className="col-md-6 mb-3">
+        <option value="APARTMENT">
 
-                        <label className="form-label">
-                            Longitude
-                        </label>
+            Apartment
 
-                        <input
-                            type="number"
-                            step="any"
-                            name="longitude"
-                            className="form-control"
-                            placeholder="73.8567"
-                            value={property.longitude}
-                            onChange={handleChange}
-                        />
+        </option>
 
-                    </div>
+        <option value="VILLA">
 
-                    <div className="col-md-6 mb-3">
+            Villa
 
-                        <label className="form-label">
-                            Property Status
-                        </label>
+        </option>
 
-                        <select
-                            name="propertyStatus"
-                            className="form-select"
-                            value={property.propertyStatus}
-                            onChange={handleChange}
-                        >
+        <option value="PLOT">
 
-                            <option value="AVAILABLE">
-                                Available
-                            </option>
+            Plot
 
-                            <option value="BOOKED">
-                                Booked
-                            </option>
+        </option>
 
-                            <option value="SOLD">
-                                Sold
-                            </option>
+        <option value="COMMERCIAL">
 
-                            <option value="UNDER_CONSTRUCTION">
-                                Under Construction
-                            </option>
+            Commercial
 
-                            <option value="READY_TO_MOVE">
-                                Ready To Move
-                            </option>
+        </option>
 
-                        </select>
+    </select>
 
-                    </div>
+</div>
 
-                    <div className="col-md-12 mb-3">
+{/* Location */}
 
-                        <label className="form-label">
-                            Description
-                        </label>
+<div className="col-md-6 mb-3">
 
-                        <textarea
-                            rows="5"
-                            name="description"
-                            className="form-control"
-                            placeholder="Property Description"
-                            value={property.description}
-                            onChange={handleChange}
-                        />
+    <label className="form-label">
 
-                    </div>
+        Location
 
-                </div>
+    </label>
 
-  <button
-    type="submit"
-    className="property-btn"
->
-    <i className="bi bi-building-add"></i>
-    <span>Add Property</span>
-</button>
+    <input
 
-            </form>
+        type="text"
+
+        name="location"
+
+        className="form-control"
+
+        placeholder="Property Location"
+
+        value={property.location}
+
+        onChange={handleChange}
+
+        required
+
+    />
+
+</div>
+
+{/* Area */}
+
+<div className="col-md-6 mb-3">
+
+    <label className="form-label">
+
+        Area (Sq Ft)
+
+    </label>
+
+    <input
+
+        type="number"
+
+        name="areaSqft"
+
+        className="form-control"
+
+        placeholder="Area in Sq Ft"
+
+        value={property.areaSqft}
+
+        onChange={handleChange}
+
+        min="1"
+
+        required
+
+    />
+
+</div>
+
+{/* Builder */}
+
+<div className="col-md-6 mb-3">
+
+    <label className="form-label">
+
+        Builder Name
+
+    </label>
+
+    <input
+
+        type="text"
+
+        name="builderName"
+
+        className="form-control"
+
+        placeholder="Builder Name"
+
+        value={property.builderName}
+
+        onChange={handleChange}
+
+    />
+
+</div>
+
+{/* Image URL */}
+
+<div className="col-md-12 mb-3">
+
+    <label className="form-label">
+
+        Property Image URL
+
+    </label>
+
+    <input
+
+        type="text"
+
+        name="imageUrl"
+
+        className="form-control"
+
+        placeholder="Paste Image URL"
+
+        value={property.imageUrl}
+
+        onChange={handleChange}
+
+    />
+
+</div>
+
+{/* Image Preview */}
+
+{
+
+    property.imageUrl && (
+
+        <div className="col-md-12 mb-3 text-center">
+
+            <img
+
+                src={
+
+                    property.imageUrl ||
+
+                    process.env.REACT_APP_DEFAULT_PROPERTY_IMAGE
+
+                }
+
+                alt="Property Preview"
+
+                onError={(e) => {
+
+                    e.target.src =
+
+                        process.env.REACT_APP_DEFAULT_PROPERTY_IMAGE;
+
+                }}
+
+                style={{
+
+                    width: "320px",
+
+                    height: "200px",
+
+                    objectFit: "cover",
+
+                    borderRadius: "15px",
+
+                    border: "1px solid #ddd"
+
+                }}
+
+            />
 
         </div>
-    );
+
+    )
+
 }
 
-export default PropertyForm;
+{/* Latitude */}
+
+<div className="col-md-6 mb-3">
+
+    <label className="form-label">
+
+        Latitude
+
+    </label>
+
+    <input
+
+        type="number"
+
+        step="any"
+
+        min="-90"
+
+        max="90"
+
+        name="latitude"
+
+        className="form-control"
+
+        placeholder="18.5204"
+
+        value={property.latitude}
+
+        onChange={handleChange}
+
+    />
+
+</div>
+
+{/* Longitude */}
+
+<div className="col-md-6 mb-3">
+
+    <label className="form-label">
+
+        Longitude
+
+    </label>
+
+    <input
+
+        type="number"
+
+        step="any"
+
+        min="-180"
+
+        max="180"
+
+        name="longitude"
+
+        className="form-control"
+
+        placeholder="73.8567"
+
+        value={property.longitude}
+
+        onChange={handleChange}
+
+    />
+
+</div>
+{/* Property Status */}
+
+<div className="col-md-6 mb-3">
+
+    <label className="form-label">
+
+        Property Status
+
+    </label>
+
+    <select
+
+        name="propertyStatus"
+
+        className="form-select"
+
+        value={property.propertyStatus}
+
+        onChange={handleChange}
+
+    >
+
+        <option value="AVAILABLE">
+
+            Available
+
+        </option>
+
+        <option value="BOOKED">
+
+            Booked
+
+        </option>
+
+        <option value="SOLD">
+
+            Sold
+
+        </option>
+
+        <option value="UNDER_CONSTRUCTION">
+
+            Under Construction
+
+        </option>
+
+        <option value="READY_TO_MOVE">
+
+            Ready To Move
+
+        </option>
+
+    </select>
+
+</div>
+
+{/* Description */}
+
+<div className="col-md-12 mb-3">
+
+    <label className="form-label">
+
+        Description
+
+    </label>
+
+    <textarea
+
+        rows="5"
+
+        name="description"
+
+        className="form-control"
+
+        placeholder="Enter Property Description"
+
+        value={property.description}
+
+        onChange={handleChange}
+
+    />
+
+</div>
+
+</div>
+
+{/* Submit Button */}
+
+<button
+
+    type="submit"
+
+    className="property-btn"
+
+    disabled={loading}
+
+>
+
+    <i className="bi bi-building-add"></i>
+
+    <span>
+
+        {
+
+            loading
+
+                ? " Adding Property..."
+
+                : " Add Property"
+
+        }
+
+    </span>
+
+</button>
+
+</form>
+
+</div>
+
+);
+
+}
+
+export default React.memo(PropertyForm);

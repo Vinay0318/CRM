@@ -1,64 +1,60 @@
-import React from "react";
+// import React from "react";
 
-function DashboardStats({
-    title,
-    value,
-    icon,
-    bgClass
-}) {
+// function DashboardStats({
 
-    return (
+//     title = "Statistics",
 
-        <div className="col-lg-3 col-md-6 mb-4">
+//     value = 0,
 
-            <div className={`stats-card ${bgClass}`}>
+//     icon = null,
 
-                <div>
+//     bgClass = ""
 
-                    <p
-                        style={{
-                            marginBottom: "8px",
-                            opacity: "0.9",
-                            fontWeight: "500"
-                        }}
-                    >
-                        {title}
-                    </p>
+// }) {
 
-                    <h2
-                        style={{
-                            fontWeight: "700",
-                            marginBottom: "10px"
-                        }}
-                    >
-                        {value}
-                    </h2>
+//     return (
 
-                    <small
-                        style={{
-                            opacity: "0.8"
-                        }}
-                    >
-                        Updated Today
-                    </small>
+//         <div className="col-lg-3 col-md-6 mb-4">
 
-                </div>
+//             <div className={`stats-card ${bgClass}`}>
 
-                <div>
+//                 <div>
 
-                    <div className="stats-icon">
+//                     <p className="stats-title">
 
-                        {icon}
+//                         {title}
 
-                    </div>
+//                     </p>
 
-                </div>
+//                     <h2 className="stats-value">
 
-            </div>
+//                         {value}
 
-        </div>
+//                     </h2>
 
-    );
-}
+//                     <small className="stats-subtitle">
 
-export default DashboardStats;
+//                         Updated Today
+
+//                     </small>
+
+//                 </div>
+
+//                 <div
+//                     className="stats-icon"
+//                     aria-hidden="true"
+//                 >
+
+//                     {icon}
+
+//                 </div>
+
+//             </div>
+
+//         </div>
+
+//     );
+
+// }
+
+// export default React.memo(DashboardStats);

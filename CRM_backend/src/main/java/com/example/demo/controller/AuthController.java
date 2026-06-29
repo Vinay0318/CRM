@@ -10,7 +10,7 @@ import com.example.demo.dto.LoginResponse;
 
 import com.example.demo.entity.User;
 import com.example.demo.entity.enums.UserRole;
-import com.example.demo.entity.enums.UserStatus;
+
 import com.example.demo.repository.UserRepository;
 import com.example.demo.dto.SendOtpRequest;
 import com.example.demo.dto.VerifyOtpRequest;
@@ -73,23 +73,7 @@ public class AuthController {
 
         // Agent Approval Check
 
-        if(user.getRole() == UserRole.AGENT) {
-
-            if(user.getStatus() ==
-                    UserStatus.PENDING) {
-
-                throw new RuntimeException(
-                        "Your account is waiting for admin approval");
-            }
-
-            if(user.getStatus() ==
-                    UserStatus.REJECTED) {
-
-                throw new RuntimeException(
-                        "Your registration request was rejected");
-            }
-        }
-
+        
         String token =
                 jwtUtil.generateToken(
                         user.getEmail(),
@@ -164,35 +148,7 @@ public class AuthController {
         );
     }
     
-    @PostMapping("/agent-register")
-    public String registerAgent(
-            @RequestBody User user) {
-
-        if(userRepo.existsByEmail(user.getEmail())) {
-
-            throw new RuntimeException(
-                    "Email Already Exists");
-        }
-
-        if(userRepo.existsByMobile(user.getMobile())) {
-
-            throw new RuntimeException(
-                    "Mobile Already Exists");
-        }
-
-        user.setPassword(
-                passwordEncoder.encode(
-                        user.getPassword()));
-
-        user.setRole(UserRole.AGENT);
-
-        user.setStatus(
-                UserStatus.PENDING);
-
-        userRepo.save(user);
-
-        return "Registration Request Sent Successfully. Waiting For Admin Approval.";
-    }
+   
     
 
   

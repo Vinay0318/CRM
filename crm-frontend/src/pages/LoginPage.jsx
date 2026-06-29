@@ -396,25 +396,6 @@ localStorage.setItem(
 
 <div className="mt-3 text-center">
 
-<p
-    style={{
-        fontSize: "14px",
-        marginBottom: "15px"
-    }}
->
-    New Agent?
-
-    <button
-        type="button"
-        className="btn btn-link p-0 ms-1"
-        onClick={() =>
-            navigate("/agent-register")
-        }
-    >
-        Create Account
-    </button>
-
-</p>
 
 <button
     className="enquiry-btn"

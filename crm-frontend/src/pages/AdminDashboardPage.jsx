@@ -12,37 +12,40 @@ import "../styles/Admin.css";
 
 function AdminDashboardPage() {
 
+    const adminName =
+        localStorage.getItem("name") || "Admin";
+
     return (
 
         <AdminLayout>
 
-            {/* Header */}
-
             <div className="dashboard-hero">
 
-    <div>
+                <div>
 
-        <div className="hero-icon">
-            📊
-        </div>
+                    <div className="hero-icon">
 
-        <h1>
-            Dashboard
-        </h1>
+                        📊
 
-        <p>
-            Welcome back, {localStorage.getItem("name")}
-        </p>
+                    </div>
 
-    </div>
+                    <h1>
 
-</div>
+                        Dashboard
 
-            {/* Statistics Cards */}
+                    </h1>
+
+                    <p>
+
+                        Welcome back, {adminName}
+
+                    </p>
+
+                </div>
+
+            </div>
 
             <AdminCards />
-
-            {/* Lead Chart + Activities */}
 
             <div className="row mt-4">
 
@@ -51,7 +54,9 @@ function AdminDashboardPage() {
                     <div className="dashboard-card">
 
                         <h4>
+
                             Lead Overview
+
                         </h4>
 
                         <LeadCharts />
@@ -65,7 +70,9 @@ function AdminDashboardPage() {
                     <div className="dashboard-card">
 
                         <h4>
+
                             Recent Activities
+
                         </h4>
 
                         <RecentActivities />
@@ -76,8 +83,6 @@ function AdminDashboardPage() {
 
             </div>
 
-            {/* Property Chart */}
-
             <div className="row mt-4">
 
                 <div className="col-lg-12">
@@ -85,7 +90,9 @@ function AdminDashboardPage() {
                     <div className="dashboard-card">
 
                         <h4>
+
                             Property Overview
+
                         </h4>
 
                         <PropertyChart />
@@ -96,8 +103,6 @@ function AdminDashboardPage() {
 
             </div>
 
-            {/* Business Insights */}
-
             <div className="row mt-4">
 
                 <div className="col-lg-12">
@@ -105,7 +110,9 @@ function AdminDashboardPage() {
                     <div className="dashboard-card">
 
                         <h4>
+
                             Business Insights
+
                         </h4>
 
                         <AdminInsights />
@@ -119,6 +126,7 @@ function AdminDashboardPage() {
         </AdminLayout>
 
     );
+
 }
 
-export default AdminDashboardPage;
+export default React.memo(AdminDashboardPage);
