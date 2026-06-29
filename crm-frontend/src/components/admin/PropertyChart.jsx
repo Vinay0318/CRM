@@ -1,9 +1,8 @@
-import React,
-{
+import React, {
     useEffect,
+    useMemo,
     useState
-}
-from "react";
+} from "react";
 
 import {
     PieChart,
@@ -12,28 +11,25 @@ import {
     Tooltip,
     ResponsiveContainer,
     Legend
-}
-from "recharts";
+} from "recharts";
 
-import PropertyService
-from "../../services/PropertyService";
+import PropertyService from "../../services/PropertyService";
 
 function PropertyChart() {
 
-    const [data,
-        setData] =
-        useState([]);
+    const [data, setData] = useState([]);
 
-    const [stats,
-        setStats] =
-        useState({
+    const [stats, setStats] = useState({
 
-            total:0,
-            available:0,
-            sold:0,
-            booked:0
+        total: 0,
 
-        });
+        available: 0,
+
+        booked: 0,
+
+        sold: 0
+
+    });
 
     useEffect(() => {
 
@@ -41,116 +37,131 @@ function PropertyChart() {
 
     }, []);
 
-    const loadProperties =
-        async () => {
+    const loadProperties = async () => {
 
-            try {
+        try {
 
-                const response =
-                    await PropertyService.getAllProperties();
+            const response =
+                await PropertyService.getAllProperties();
 
-                const properties =
-                    response.data;
+            const properties =
+                response.data;
 
-                const counts = {};
+            const statusCount = {};
 
-                let available = 0;
-                let sold = 0;
-                let booked = 0;
+            let available = 0;
 
-                properties.forEach(property => {
+            let booked = 0;
 
-                    counts[
-                        property.propertyStatus
-                    ] =
+            let sold = 0;
 
-                    (
-                        counts[
-                            property.propertyStatus
-                        ] || 0
-                    ) + 1;
+            properties.forEach(property => {
 
-                    if(
-                        property.propertyStatus ===
-                        "AVAILABLE"
-                    ){
+                const status =
+                    property.propertyStatus;
+
+                statusCount[status] =
+                    (statusCount[status] || 0) + 1;
+
+                switch (status) {
+
+                    case "AVAILABLE":
+
                         available++;
-                    }
 
-                    if(
-                        property.propertyStatus ===
-                        "SOLD"
-                    ){
-                        sold++;
-                    }
+                        break;
 
-                    if(
-                        property.propertyStatus ===
-                        "BOOKED"
-                    ){
+                    case "BOOKED":
+
                         booked++;
-                    }
 
-                });
+                        break;
 
-                setStats({
+                    case "SOLD":
 
-                    total:
-                        properties.length,
+                        sold++;
 
-                    available,
+                        break;
 
-                    sold,
+                    default:
 
-                    booked
+                        break;
 
-                });
+                }
 
-                const chartData =
-                    Object.keys(counts)
-                    .map(status => ({
+            });
 
-                        name: status,
+            setStats({
 
-                        value:
-                            counts[status]
+                total: properties.length,
+
+                available,
+
+                booked,
+
+                sold
+
+            });
+
+            const chartData =
+
+                Object.entries(statusCount)
+
+                    .sort()
+
+                    .map(([name, value]) => ({
+
+                        name,
+
+                        value
 
                     }));
 
-                setData(chartData);
+            setData(chartData);
 
-            }
+        }
 
-            catch(error){
+        catch (error) {
 
-                console.log(error);
+            console.error(
 
-            }
-        };
+                "Unable to load property statistics",
 
-    const COLORS = [
+                error
+
+            );
+
+        }
+
+    };
+
+    const COLORS = useMemo(() => [
 
         "#4f46e5",
+
         "#10b981",
+
         "#f59e0b",
+
         "#ef4444",
+
         "#8b5cf6"
 
-    ];
+    ], []);
 
     return (
 
         <div>
 
-<div className="property-stats-row">
+            {/* Summary Cards */}
+
+            <div className="property-stats-row">
 
                 <div className="mini-card">
 
                     <h6>Total</h6>
 
-                    <h3>
-                        {stats.total}
-                    </h3>
+                    <h3>{stats.total}</h3>
 
                 </div>
 
@@ -158,9 +169,7 @@ function PropertyChart() {
 
                     <h6>Available</h6>
 
-                    <h3>
-                        {stats.available}
-                    </h3>
+                    <h3>{stats.available}</h3>
 
                 </div>
 
@@ -168,9 +177,7 @@ function PropertyChart() {
 
                     <h6>Booked</h6>
 
-                    <h3>
-                        {stats.booked}
-                    </h3>
+                    <h3>{stats.booked}</h3>
 
                 </div>
 
@@ -178,70 +185,102 @@ function PropertyChart() {
 
                     <h6>Sold</h6>
 
-                    <h3>
-                        {stats.sold}
-                    </h3>
+                    <h3>{stats.sold}</h3>
 
                 </div>
 
             </div>
 
+            {/* Pie Chart */}
+
             <ResponsiveContainer
-    width="100%"
-    height={260}
->
 
-<PieChart
-    margin={{
-        top:20,
-        right:20,
-        left:20,
-        bottom:20
-    }}
->
+                width="100%"
 
-<Pie
-    data={data}
-    cx="50%"
-    cy="45%"
-    outerRadius={90}
+                height={300}
+
+            >
+
+                <PieChart
+
+                    margin={{
+
+                        top: 20,
+
+                        right: 20,
+
+                        left: 20,
+
+                        bottom: 20
+
+                    }}
+
+                >
+
+                    <Pie
+
+                        data={data}
+
+                        cx="50%"
+
+                        cy="45%"
+
+                        outerRadius={90}
+
                         dataKey="value"
+
+                        nameKey="name"
+
                         label
+
                     >
 
                         {
-                            data.map(
-                                (
-                                    entry,
-                                    index
-                                ) => (
 
-                                    <Cell
-                                        key={index}
-                                        fill={
-                                            COLORS[
-                                                index %
-                                                COLORS.length
-                                            ]
-                                        }
-                                    />
+                            data.map((entry, index) => (
 
-                                )
-                            )
+                                <Cell
+
+                                    key={entry.name}
+
+                                    fill={
+
+                                        COLORS[
+
+                                            index %
+
+                                            COLORS.length
+
+                                        ]
+
+                                    }
+
+                                />
+
+                            ))
+
                         }
 
                     </Pie>
 
                     <Tooltip />
 
-                    <Legend />
+                    <Legend
+
+                        verticalAlign="bottom"
+
+                        height={36}
+
+                    />
 
                 </PieChart>
 
             </ResponsiveContainer>
 
         </div>
+
     );
+
 }
 
-export default PropertyChart;
+export default React.memo(PropertyChart);

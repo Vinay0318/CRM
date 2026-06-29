@@ -1,64 +1,83 @@
-function LeadCard({
-  lead,
-  onSelect
-}) {
+import React from "react";
 
-  return (
+function LeadCard({ lead, onSelect }) {
 
-    <div
-      className="lead-card"
-      onClick={() =>
-        onSelect(lead)
-      }
-    >
+    if (!lead) return null;
 
-      <div>
+    const getBadgeClass = (status) => {
 
-        <h6>
-          {lead.name}
-        </h6>
+        switch (status) {
 
-        <small>
+            case "NEW":
+                return "bg-danger";
 
-          📍 {lead.location}
+            case "CONTACTED":
+                return "bg-primary";
 
-        </small>
+            case "INTERESTED":
+                return "bg-warning text-dark";
 
-        <br />
+            case "BOOKING":
+                return "bg-success";
 
-        <small>
-
-          ₹ {lead.budget}
-
-        </small>
-
-      </div>
-
-      <div>
-
-        {
-          lead.status === "NEW" ?
-
-          (
-            <span className="badge bg-danger">
-              NEW
-            </span>
-          )
-
-          :
-
-          (
-            <span className="badge bg-primary">
-              {lead.status}
-            </span>
-          )
+            default:
+                return "bg-secondary";
         }
 
-      </div>
+    };
 
-    </div>
+    return (
 
-  );
+        <div
+            className="lead-card"
+            onClick={() => onSelect(lead)}
+            role="button"
+            tabIndex={0}
+            style={{ cursor: "pointer" }}
+        >
+
+            <div>
+
+                <h6 className="mb-1">
+
+                    {lead.name || "N/A"}
+
+                </h6>
+
+                <small className="text-muted">
+
+                    📍 {lead.location || "Not Available"}
+
+                </small>
+
+                <br />
+
+                <small className="text-success fw-bold">
+
+                    ₹{" "}
+
+                    {Number(lead.budget || 0).toLocaleString("en-IN")}
+
+                </small>
+
+            </div>
+
+            <div>
+
+                <span
+                    className={`badge ${getBadgeClass(lead.status)}`}
+                >
+
+                    {lead.status || "UNKNOWN"}
+
+                </span>
+
+            </div>
+
+        </div>
+
+    );
+
 }
 
-export default LeadCard;
+export default React.memo(LeadCard);

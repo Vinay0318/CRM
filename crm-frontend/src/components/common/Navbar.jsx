@@ -1,84 +1,84 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+// import React from 'react';
+// import { Link } from 'react-router-dom';
 
-import '../../styles/Navbar.css';
+// import '../../styles/Navbar.css';
 
-function Navbar() {
+// function Navbar() {
 
-  return (
+//   return (
 
-    <nav
-      className="navbar navbar-expand-lg navbar-dark custom-navbar"
-    >
+//     <nav
+//       className="navbar navbar-expand-lg navbar-dark custom-navbar"
+//     >
 
-      <div className="container">
+//       <div className="container">
 
-        <Link
-          className="navbar-brand fw-bold"
-          to="/"
-        >
-          <i className="bi bi-buildings-fill"></i>
+//         <Link
+//           className="navbar-brand fw-bold"
+//           to="/"
+//         >
+//           <i className="bi bi-buildings-fill"></i>
 
-          &nbsp; Real Estate CRM
-        </Link>
+//           &nbsp; Real Estate CRM
+//         </Link>
 
-        <button
-          className="navbar-toggler"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+//         <button
+//           className="navbar-toggler"
+//           data-bs-toggle="collapse"
+//           data-bs-target="#navbarNav"
+//         >
+//           <span className="navbar-toggler-icon"></span>
+//         </button>
 
-        <div
-          className="collapse navbar-collapse"
-          id="navbarNav"
-        >
+//         <div
+//           className="collapse navbar-collapse"
+//           id="navbarNav"
+//         >
 
-          <ul className="navbar-nav ms-auto">
+//           <ul className="navbar-nav ms-auto">
 
-            <li className="nav-item">
+//             <li className="nav-item">
 
-              <Link
-                className="nav-link"
-                to="/"
-              >
-                Enquiry Form
-              </Link>
+//               <Link
+//                 className="nav-link"
+//                 to="/"
+//               >
+//                 Enquiry Form
+//               </Link>
 
-            </li>
+//             </li>
 
-            <li className="nav-item">
+//             <li className="nav-item">
 
-              <Link
-                className="nav-link"
-                to="/dashboard"
-              >
-                Manager Dashboard
-              </Link>
+//               <Link
+//                 className="nav-link"
+//                 to="/dashboard"
+//               >
+//                 Manager Dashboard
+//               </Link>
 
-            </li>
+//             </li>
 
-            <li className="nav-item">
+//             <li className="nav-item">
 
-              <Link
-                className="nav-link"
-                to="/admin/dashboard"
-              >
-                Admin Dashboard
-              </Link>
+//               <Link
+//                 className="nav-link"
+//                 to="/admin/dashboard"
+//               >
+//                 Admin Dashboard
+//               </Link>
 
-            </li>
+//             </li>
 
-          </ul>
+//           </ul>
 
-        </div>
+//         </div>
 
-      </div>
+//       </div>
 
-    </nav>
+//     </nav>
 
-  );
-}
+//   );
+// }
 
-export default Navbar;
+// export default Navbar;

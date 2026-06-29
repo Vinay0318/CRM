@@ -1,19 +1,72 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "../../styles/Sidebar.css";
 
-import LogoutService from "../../services/LogoutService";
 import Swal from "sweetalert2";
+import LogoutService from "../../services/LogoutService";
 
 function Sidebar({ activeTab, setActiveTab }) {
 
-    const handleLogout = () => {
+    const managerName =
+        localStorage.getItem("name") || "Manager";
+
+    const menuItems = [
+
+        {
+            key: "dashboard",
+            label: "Dashboard",
+            icon: "bi bi-grid-fill"
+        },
+
+        {
+            key: "new",
+            label: "New Leads",
+            icon: "bi bi-bell-fill"
+        },
+
+        {
+            key: "assigned",
+            label: "Assigned Leads",
+            icon: "bi bi-person-check-fill"
+        },
+
+        {
+            key: "properties",
+            label: "Properties",
+            icon: "bi bi-buildings-fill"
+        },
+
+        {
+            key: "agents",
+            label: "Agents",
+            icon: "bi bi-people-fill"
+        },
+
+        {
+            key: "stats",
+            label: "Statistics",
+            icon: "bi bi-bar-chart-fill"
+        }
+
+    ];
+
+    const handleLogout = useCallback(() => {
 
         Swal.fire({
-            title: "Logout ?",
-            text: "Do you want to logout?",
+
+            title: "Logout?",
+
+            text: "Do you really want to logout?",
+
             icon: "question",
+
             showCancelButton: true,
+
+            confirmButtonText: "Logout",
+
+            cancelButtonText: "Cancel",
+
             confirmButtonColor: "#dc3545"
+
         }).then((result) => {
 
             if (result.isConfirmed) {
@@ -24,7 +77,7 @@ function Sidebar({ activeTab, setActiveTab }) {
 
         });
 
-    };
+    }, []);
 
     return (
 
@@ -32,147 +85,106 @@ function Sidebar({ activeTab, setActiveTab }) {
 
             <div>
 
-                {/* LOGO */}
+                {/* Logo */}
 
                 <div className="sidebar-header">
 
                     <div className="sidebar-logo">
+
                         🏢
+
                     </div>
 
                     <h4 className="sidebar-title">
+
                         CRM Panel
+
                     </h4>
 
                     <small className="sidebar-subtitle">
+
                         Manager Portal
+
                     </small>
 
                 </div>
 
-                {/* MANAGER CARD */}
+                {/* Manager Info */}
 
                 <div className="manager-profile">
 
                     <div>
 
                         <h6>
-                            {localStorage.getItem("name")}
+
+                            {managerName}
+
                         </h6>
 
                         <small>
+
                             Manager
+
                         </small>
 
                     </div>
 
                 </div>
 
-                {/* MENU */}
+                {/* Sidebar Menu */}
 
                 <div className="sidebar-menu">
 
-                    <button
-                        className={`sidebar-link ${
-                            activeTab === "dashboard"
-                                ? "active"
-                                : ""
-                        }`}
-                        onClick={() =>
-                            setActiveTab("dashboard")
-                        }
-                    >
-                        <i className="bi bi-grid-fill"></i>
-                        Dashboard
-                    </button>
+                    {
 
-                    <button
-                        className={`sidebar-link ${
-                            activeTab === "new"
-                                ? "active"
-                                : ""
-                        }`}
-                        onClick={() =>
-                            setActiveTab("new")
-                        }
-                    >
-                        <i className="bi bi-bell-fill"></i>
-                        New Leads
-                    </button>
+                        menuItems.map((item) => (
 
-                    <button
-                        className={`sidebar-link ${
-                            activeTab === "assigned"
-                                ? "active"
-                                : ""
-                        }`}
-                        onClick={() =>
-                            setActiveTab("assigned")
-                        }
-                    >
-                        <i className="bi bi-person-check-fill"></i>
-                        Assigned Leads
-                    </button>
+                            <button
 
-                    <button
-                        className={`sidebar-link ${
-                            activeTab === "properties"
-                                ? "active"
-                                : ""
-                        }`}
-                        onClick={() =>
-                            setActiveTab("properties")
-                        }
-                    >
-                        <i className="bi bi-buildings-fill"></i>
-                        Properties
-                    </button>
+                                key={item.key}
 
-                    {/* NEW AGENTS MENU */}
+                                className={`sidebar-link ${
+                                    activeTab === item.key
+                                        ? "active"
+                                        : ""
+                                }`}
 
-                    <button
-                        className={`sidebar-link ${
-                            activeTab === "agents"
-                                ? "active"
-                                : ""
-                        }`}
-                        onClick={() =>
-                            setActiveTab("agents")
-                        }
-                    >
-                        <i className="bi bi-people-fill"></i>
-                        Agents
-                    </button>
+                                onClick={() =>
+                                    setActiveTab(item.key)
+                                }
 
-                    <button
-                        className={`sidebar-link ${
-                            activeTab === "stats"
-                                ? "active"
-                                : ""
-                        }`}
-                        onClick={() =>
-                            setActiveTab("stats")
-                        }
-                    >
-                        <i className="bi bi-bar-chart-fill"></i>
-                        Statistics
-                    </button>
+                            >
+
+                                <i className={item.icon}></i>
+
+                                {item.label}
+
+                            </button>
+
+                        ))
+
+                    }
 
                 </div>
 
             </div>
 
-            {/* LOGOUT */}
+            {/* Logout */}
 
             <div className="sidebar-footer">
 
                 <button
+
                     className="logout-btn"
+
                     onClick={handleLogout}
+
                 >
+
                     <i className="bi bi-box-arrow-right"></i>
 
                     Logout
+
                 </button>
 
             </div>
@@ -183,4 +195,4 @@ function Sidebar({ activeTab, setActiveTab }) {
 
 }
 
-export default Sidebar;
+export default React.memo(Sidebar);

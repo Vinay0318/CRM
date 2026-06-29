@@ -1,126 +1,149 @@
-import React,
-{
-    useEffect,
-    useState
-}
-from "react";
+// import React, {
+//     useEffect,
+//     useMemo,
+//     useState
+// } from "react";
 
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    CartesianGrid
-}
-from "recharts";
+// import {
+//     BarChart,
+//     Bar,
+//     XAxis,
+//     YAxis,
+//     Tooltip,
+//     ResponsiveContainer,
+//     CartesianGrid
+// } from "recharts";
 
-import UserService
-from "../../services/UserService";
+// import UserService from "../../services/UserService";
 
-function ManagerChart() {
+// function ManagerChart() {
 
-    const [data,
-        setData] =
-        useState([]);
+//     const [data, setData] = useState([]);
 
-    useEffect(() => {
+//     useEffect(() => {
 
-        loadManagers();
+//         loadManagers();
 
-    }, []);
+//     }, []);
 
-    const loadManagers =
-        async () => {
+//     const loadManagers = async () => {
 
-            try {
+//         try {
 
-                const response =
-                    await UserService.getManagers();
+//             const response =
+//                 await UserService.getManagers();
 
-                const managers =
-                    response.data;
+//             const managers =
+//                 response.data;
 
-                const cityCount = {};
+//             const cityCount = {};
 
-                managers.forEach(manager => {
+//             managers.forEach(manager => {
 
-                    cityCount[
-                        manager.assignedCity
-                    ] =
-                        (cityCount[
-                            manager.assignedCity
-                        ] || 0) + 1;
-                });
+//                 if (!manager.assignedCity) return;
 
-                const chartData =
-                    Object.keys(cityCount)
-                        .map(city => ({
+//                 cityCount[manager.assignedCity] =
+//                     (cityCount[manager.assignedCity] || 0) + 1;
 
-                            city,
+//             });
 
-                            managers:
-                                cityCount[
-                                city
-                                ]
+//             const chartData = Object.keys(cityCount)
+//                 .sort()
+//                 .map(city => ({
 
-                        }));
+//                     city,
 
-                setData(chartData);
+//                     managers: cityCount[city]
 
-            } catch(error) {
+//                 }));
 
-                console.log(error);
-            }
-        };
+//             setData(chartData);
 
-    return (
+//         }
 
-        <div className="chart-card">
+//         catch (error) {
 
-            <h5>
-                Managers By City
-            </h5>
+//             console.error(
 
-            <ResponsiveContainer
-                width="100%"
-                height={350}
-            >
+//                 "Unable to load manager chart",
 
-                <BarChart
-                    data={data}
-                >
+//                 error
 
-                    <CartesianGrid
-                        strokeDasharray="3 3"
-                    />
+//             );
 
-                    <XAxis
-                        dataKey="city"
-                    />
+//         }
 
-                    <YAxis />
+//     };
 
-                    <Tooltip />
+//     const tooltipStyle = useMemo(() => ({
 
-                    <Bar
-                        dataKey="managers"
-                        fill="#10b981"
-                        radius={[
-                            10,
-                            10,
-                            0,
-                            0
-                        ]}
-                    />
+//         borderRadius: "10px",
 
-                </BarChart>
+//         border: "none",
 
-            </ResponsiveContainer>
+//         boxShadow: "0 4px 12px rgba(0,0,0,.15)"
 
-        </div>
-    );
-}
+//     }), []);
 
-export default ManagerChart;
+//     return (
+
+//         <div className="chart-card">
+
+//             <div className="d-flex justify-content-between align-items-center mb-3">
+
+//                 <h5>
+
+//                     Managers By City
+
+//                 </h5>
+
+//                 <span className="badge bg-success">
+
+//                     Live Data
+
+//                 </span>
+
+//             </div>
+
+//             <ResponsiveContainer
+//                 width="100%"
+//                 height={350}
+//             >
+
+//                 <BarChart
+//                     data={data}
+//                 >
+
+//                     <CartesianGrid
+//                         strokeDasharray="3 3"
+//                     />
+
+//                     <XAxis
+//                         dataKey="city"
+//                     />
+
+//                     <YAxis
+//                         allowDecimals={false}
+//                     />
+
+//                     <Tooltip
+//                         contentStyle={tooltipStyle}
+//                     />
+
+//                     <Bar
+//                         dataKey="managers"
+//                         fill="#10b981"
+//                         radius={[10, 10, 0, 0]}
+//                     />
+
+//                 </BarChart>
+
+//             </ResponsiveContainer>
+
+//         </div>
+
+//     );
+
+// }
+
+// export default React.memo(ManagerChart);

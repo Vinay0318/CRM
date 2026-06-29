@@ -234,35 +234,6 @@ function ManagerPropertyTable() {
     return (
 
         <div className="manager-property-container">
-<div className="property-hero">
-
-<div className="hero-left">
-
-    <div className="hero-icon">
-        🏢
-    </div>
-
-    <div>
-
-        <h2 className="hero-title">
-            My City Properties
-        </h2>
-
-        <p className="hero-subtitle">
-            Manage all properties available in
-
-            <strong>
-                {" "}
-                {localStorage.getItem("assignedCity")}
-            </strong>
-
-        </p>
-
-    </div>
-
-</div>
-
-</div>
 
 <div className="property-stats-row">
 

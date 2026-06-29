@@ -35,17 +35,17 @@ function AdminCards() {
 
             try {
 
-                const leadResponse =
-                    await LeadService.getAllLeads();
-
-                const managerResponse =
-                    await UserService.getManagers();
-
-                const agentResponse =
-                    await UserService.getAgents();
-
-                const propertyResponse =
-                    await PropertyService.getAllProperties();
+               const [
+    leadResponse,
+    managerResponse,
+    agentResponse,
+    propertyResponse
+] = await Promise.all([
+    LeadService.getAllLeads(),
+    UserService.getManagers(),
+    UserService.getAgents(),
+    PropertyService.getAllProperties()
+]);
 
                 setStats({
 

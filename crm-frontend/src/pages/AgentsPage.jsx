@@ -1,96 +1,133 @@
-import React,
-{
-    useState
-}
-from "react";
+import React, { useState } from "react";
 
-import AdminLayout
-from "../components/admin/AdminLayout";
-
-
-
-import AgentTable
-from "../components/admin/AgentTable";
+import AdminLayout from "../components/admin/AdminLayout";
+import AgentTable from "../components/admin/AgentTable";
+import AgentForm from "../components/admin/AgentForm";
 
 function AgentsPage() {
 
-    const [showForm,
-        setShowForm] =
-        useState(false);
+    const [showForm, setShowForm] = useState(false);
+
+    const [reload, setReload] = useState(false);
+
+    const handleClose = () => {
+
+        setShowForm(false);
+
+    };
+
+    const handleReload = () => {
+
+        setReload(prev => !prev);
+
+        handleClose();
+
+    };
 
     return (
 
         <AdminLayout>
 
-<div className="lead-page-header">
+            <section>
 
-<div>
+                {/* Header */}
 
-    <h1 className="lead-page-title">
-        👨‍💻 Approved Agents
-    </h1>
+                <div className="lead-page-header">
 
-    <p className="lead-page-subtitle">
-        Manage all approved agents
-    </p>
+                    <div>
 
-</div>
+                        <h1 className="lead-page-title">
 
+                            👨‍💻 Agents
 
+                        </h1>
 
-</div>
+                        <p className="lead-page-subtitle">
 
-            {
-                showForm && (
+                            Manage all approved agents
 
-                    <div className="form-modal">
-
-                        <div
-                            className="form-modal-content"
-                        >
-
-                            <div
-                                style={{
-                                    display:"flex",
-                                    justifyContent:"space-between",
-                                    alignItems:"center",
-                                    marginBottom:"20px"
-                                }}
-                            >
-
-                                <h3>
-                                    Add Agent
-                                </h3>
-
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={() =>
-                                        setShowForm(false)
-                                    }
-                                >
-                                    X
-                                </button>
-
-                            </div>
-
-                        
-
-                        </div>
+                        </p>
 
                     </div>
 
-                )
-            }
+                    <button
 
-            <div className="table-card">
+                        className="manager-btn"
 
-                <AgentTable />
+                        onClick={() => setShowForm(true)}
 
-            </div>
+                    >
+
+                        <i className="bi bi-person-plus-fill me-2"></i>
+
+                        Add Agent
+
+                    </button>
+
+                </div>
+
+                {/* Add Agent Modal */}
+
+                {
+
+                    showForm && (
+
+                        <div className="form-modal">
+
+                            <div className="form-modal-content">
+
+                                <div className="d-flex justify-content-between align-items-center mb-4">
+
+                                    <h3 className="mb-0">
+
+                                        Add New Agent
+
+                                    </h3>
+
+                                    <button
+
+                                        type="button"
+
+                                        className="btn btn-outline-danger"
+
+                                        onClick={handleClose}
+
+                                    >
+
+                                        <i className="bi bi-x-lg"></i>
+
+                                    </button>
+
+                                </div>
+
+                                <AgentForm
+
+                                    loadAgents={handleReload}
+
+                                />
+
+                            </div>
+
+                        </div>
+
+                    )
+
+                }
+
+                {/* Agent Table */}
+
+                <div className="table-card">
+
+                    <AgentTable key={reload} />
+
+                </div>
+
+            </section>
 
         </AdminLayout>
 
     );
+
 }
 
-export default AgentsPage;
+export default React.memo(AgentsPage);

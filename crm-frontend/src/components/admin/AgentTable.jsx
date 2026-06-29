@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import UserService from "../../services/UserService";
 import Swal from "sweetalert2";
 
@@ -8,30 +8,37 @@ function AgentTable() {
     const [search, setSearch] = useState("");
 
     useEffect(() => {
+
         loadAgents();
+
     }, []);
 
     const loadAgents = async () => {
 
         try {
 
-            const response =
-                await UserService.getAgents();
+            const response = await UserService.getAgents();
 
-            const approvedAgents =
-                response.data.filter(
-                    agent =>
-                        agent.status === "APPROVED"
-                        || !agent.status
-                );
+            const approvedAgents = response.data.filter(
+
+                agent =>
+
+                    agent.status === "APPROVED" ||
+
+                    !agent.status
+
+            );
 
             setAgents(approvedAgents);
 
-        } catch (error) {
+        }
 
-            console.log(error);
+        catch (error) {
+
+            console.error("Unable to load agents", error);
 
         }
+
     };
 
     const viewAgent = (agent) => {
@@ -49,42 +56,92 @@ function AgentTable() {
                     <p><b>Manager:</b> ${agent.assignedManagerName || "-"}</p>
                 </div>
             `,
-            width: 600
+
+            width: 600,
+
+            confirmButtonColor: "#198754"
 
         });
+
     };
 
     const deleteAgent = async (id) => {
 
-        Swal.fire({
+        const result = await Swal.fire({
 
             title: "Delete Agent?",
+
+            text: "This action cannot be undone.",
+
             icon: "warning",
-            showCancelButton: true
 
-        }).then(async (result) => {
+            showCancelButton: true,
 
-            if (result.isConfirmed) {
+            confirmButtonText: "Delete",
 
-                await UserService.deleteUser(id);
+            confirmButtonColor: "#dc3545"
 
-                Swal.fire(
-                    "Deleted!",
-                    "Agent Removed",
-                    "success"
-                );
-
-                loadAgents();
-            }
         });
+
+        if (!result.isConfirmed) return;
+
+        try {
+
+            await UserService.deleteUser(id);
+
+            Swal.fire({
+
+                icon: "success",
+
+                title: "Deleted",
+
+                text: "Agent removed successfully."
+
+            });
+
+            loadAgents();
+
+        }
+
+        catch (error) {
+
+            console.error("Delete Error", error);
+
+            Swal.fire({
+
+                icon: "error",
+
+                title: "Error",
+
+                text: "Unable to delete agent."
+
+            });
+
+        }
+
     };
 
-    const filteredAgents =
-        agents.filter(agent =>
-            agent.name
-                ?.toLowerCase()
-                .includes(search.toLowerCase())
+    const filteredAgents = useMemo(() => {
+
+        const keyword = search.toLowerCase();
+
+        return agents.filter(agent =>
+
+            agent.name?.toLowerCase().includes(keyword) ||
+
+            agent.email?.toLowerCase().includes(keyword) ||
+
+            agent.mobile?.includes(keyword) ||
+
+            agent.assignedCity?.toLowerCase().includes(keyword) ||
+
+            agent.assignedArea?.toLowerCase().includes(keyword) ||
+
+            agent.assignedManagerName?.toLowerCase().includes(keyword)
+
         );
+
+    }, [agents, search]);
 
     return (
 
@@ -97,40 +154,61 @@ function AgentTable() {
                     <h3>Approved Agents</h3>
 
                     <p>
+
                         Total Agents :
+
                         <strong>
+
                             {" "}
+
                             {filteredAgents.length}
+
                         </strong>
+
                     </p>
 
                 </div>
 
                 <input
+
                     type="text"
+
                     className="form-control agent-search"
-                    placeholder="Search Agent..."
+
+                    placeholder="Search by Name, Email, City..."
+
                     value={search}
+
                     onChange={(e) =>
+
                         setSearch(e.target.value)
+
                     }
+
                 />
 
             </div>
 
-            <table className="table agent-table">
+            <table className="table table-hover agent-table">
 
                 <thead>
 
                     <tr>
 
                         <th>Agent Name</th>
-                        <th>Manager Name</th>
+
+                        <th>Manager</th>
+
                         <th>Email</th>
+
                         <th>Mobile</th>
+
                         <th>City</th>
+
                         <th>Area</th>
+
                         <th>Status</th>
+
                         <th>Actions</th>
 
                     </tr>
@@ -139,74 +217,106 @@ function AgentTable() {
 
                 <tbody>
 
-                    {filteredAgents.map((agent) => (
+                    {
 
-                        <tr key={agent.userId}>
+                        filteredAgents.length > 0 ?
 
-                            <td>{agent.name}</td>
+                            filteredAgents.map(agent => (
 
-                            <td>
-                                {agent.assignedManagerName || "-"}
-                            </td>
+                                <tr key={agent.userId}>
 
-                            <td>{agent.email}</td>
+                                    <td>{agent.name}</td>
 
-                            <td>{agent.mobile}</td>
+                                    <td>{agent.assignedManagerName || "-"}</td>
 
-                            <td>{agent.assignedCity}</td>
+                                    <td>{agent.email}</td>
 
-                            <td>{agent.assignedArea}</td>
+                                    <td>{agent.mobile}</td>
 
-                            <td>
+                                    <td>{agent.assignedCity}</td>
 
-                                <span className="badge bg-success">
+                                    <td>{agent.assignedArea}</td>
 
-                                    APPROVED
+                                    <td>
 
-                                </span>
+                                        <span className="badge bg-success">
 
-                            </td>
+                                            APPROVED
 
-                            <td>
+                                        </span>
 
-                                <button
-                                    className="btn btn-info btn-sm me-2"
-                                    onClick={() =>
-                                        viewAgent(agent)
-                                    }
+                                    </td>
+
+                                    <td>
+
+                                        <button
+
+                                            className="btn btn-info btn-sm me-2"
+
+                                            onClick={() => viewAgent(agent)}
+
+                                        >
+
+                                            <i className="bi bi-eye"></i>
+
+                                        </button>
+
+                                        <button
+
+                                            className="btn btn-warning btn-sm me-2"
+
+                                        >
+
+                                            <i className="bi bi-pencil-square"></i>
+
+                                        </button>
+
+                                        <button
+
+                                            className="btn btn-danger btn-sm"
+
+                                            onClick={() => deleteAgent(agent.userId)}
+
+                                        >
+
+                                            <i className="bi bi-trash"></i>
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                            :
+
+                            <tr>
+
+                                <td
+
+                                    colSpan="8"
+
+                                    className="text-center text-muted py-4"
+
                                 >
-                                    <i className="bi bi-eye"></i>
-                                </button>
 
-                                <button
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    <i className="bi bi-pencil-square"></i>
-                                </button>
+                                    No agents found.
 
-                                <button
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() =>
-                                        deleteAgent(
-                                            agent.userId
-                                        )
-                                    }
-                                >
-                                    <i className="bi bi-trash"></i>
-                                </button>
+                                </td>
 
-                            </td>
+                            </tr>
 
-                        </tr>
-
-                    ))}
+                    }
 
                 </tbody>
 
             </table>
 
         </div>
+
     );
+
 }
 
 export default AgentTable;

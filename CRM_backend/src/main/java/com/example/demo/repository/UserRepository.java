@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.entity.User;
 
 import com.example.demo.entity.enums.UserRole;
-import com.example.demo.entity.enums.UserStatus;
+
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
@@ -33,8 +33,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByMobile(
             String mobile);
     
-    List<User> findByRoleAndStatus(
-            UserRole role,
-            UserStatus status);
+   
 }
 

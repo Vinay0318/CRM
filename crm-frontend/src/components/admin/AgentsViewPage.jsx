@@ -1,387 +1,387 @@
-import React, {
-    useEffect,
-    useState
-} from "react";
+// import React, {
+//     useEffect,
+//     useState
+// } from "react";
 
-import UserService
-from "../../services/UserService";
+// import UserService
+// from "../../services/UserService";
 
-import {
-    Modal,
-    Button
-}
-from "react-bootstrap";
+// import {
+//     Modal,
+//     Button
+// }
+// from "react-bootstrap";
 
-import "../../styles/viewPages.css";
+// import "../../styles/viewPages.css";
 
-function AgentsViewPage() {
+// function AgentsViewPage() {
 
-    const [agents,
-        setAgents] =
-        useState([]);
+//     const [agents,
+//         setAgents] =
+//         useState([]);
 
-    const [search,
-        setSearch] =
-        useState("");
+//     const [search,
+//         setSearch] =
+//         useState("");
 
-    const [selectedAgent,
-        setSelectedAgent] =
-        useState(null);
+//     const [selectedAgent,
+//         setSelectedAgent] =
+//         useState(null);
 
-    const [show,
-        setShow] =
-        useState(false);
+//     const [show,
+//         setShow] =
+//         useState(false);
 
-    useEffect(() => {
+//     useEffect(() => {
 
-        loadAgents();
+//         loadAgents();
 
-    }, []);
+//     }, []);
 
-    const loadAgents =
-        async () => {
+//     const loadAgents =
+//         async () => {
 
-            try {
+//             try {
 
-                const response =
-                    await UserService.getAgents();
+//                 const response =
+//                     await UserService.getAgents();
 
-                setAgents(
-                    response.data
-                );
+//                 setAgents(
+//                     response.data
+//                 );
 
-            } catch (error) {
+//             } catch (error) {
 
-                console.error(error);
-            }
-        };
+//                 console.error(error);
+//             }
+//         };
 
-    const filteredAgents =
-        agents.filter(
-            agent =>
-                agent.assignedCity
-                    ?.toLowerCase()
-                    .includes(
-                        search.toLowerCase()
-                    ) ||
+//     const filteredAgents =
+//         agents.filter(
+//             agent =>
+//                 agent.assignedCity
+//                     ?.toLowerCase()
+//                     .includes(
+//                         search.toLowerCase()
+//                     ) ||
 
-                agent.assignedArea
-                    ?.toLowerCase()
-                    .includes(
-                        search.toLowerCase()
-                    )
-        );
+//                 agent.assignedArea
+//                     ?.toLowerCase()
+//                     .includes(
+//                         search.toLowerCase()
+//                     )
+//         );
 
-    return (
+//     return (
 
-        <div className="view-page">
+//         <div className="view-page">
 
-            <div className="page-header">
+//             <div className="page-header">
 
-                <div>
+//                 <div>
 
-                    <h1 className="page-title">
-                        👨‍💻 Agents Overview
-                    </h1>
+//                     <h1 className="page-title">
+//                         👨‍💻 Agents Overview
+//                     </h1>
 
-                    <p className="page-subtitle">
-                        Monitor agents city-wise and area-wise
-                    </p>
+//                     <p className="page-subtitle">
+//                         Monitor agents city-wise and area-wise
+//                     </p>
 
-                </div>
+//                 </div>
 
-                <div className="header-count">
+//                 <div className="header-count">
 
-                    {filteredAgents.length}
+//                     {filteredAgents.length}
 
-                    <span>
-                        Agents
-                    </span>
+//                     <span>
+//                         Agents
+//                     </span>
 
-                </div>
+//                 </div>
 
-            </div>
+//             </div>
 
-            <div className="search-wrapper">
+//             <div className="search-wrapper">
 
-                <i className="bi bi-search search-icon"></i>
+//                 <i className="bi bi-search search-icon"></i>
 
-                <input
-                    type="text"
-                    className="form-control search-box"
-                    placeholder="Search By City Or Area..."
-                    value={search}
-                    onChange={(e) =>
-                        setSearch(
-                            e.target.value
-                        )
-                    }
-                />
+//                 <input
+//                     type="text"
+//                     className="form-control search-box"
+//                     placeholder="Search By City Or Area..."
+//                     value={search}
+//                     onChange={(e) =>
+//                         setSearch(
+//                             e.target.value
+//                         )
+//                     }
+//                 />
 
-            </div>
+//             </div>
 
-            <div className="row mt-4">
+//             <div className="row mt-4">
 
-                {
+//                 {
 
-                    filteredAgents.map(
-                        agent => (
+//                     filteredAgents.map(
+//                         agent => (
 
-                            <div
-                                className="col-lg-4 col-md-6 mb-4"
-                                key={
-                                    agent.userId
-                                }
-                            >
+//                             <div
+//                                 className="col-lg-4 col-md-6 mb-4"
+//                                 key={
+//                                     agent.userId
+//                                 }
+//                             >
 
-                                <div
-                                    className="manager-card h-100"
-                                    onClick={() => {
+//                                 <div
+//                                     className="manager-card h-100"
+//                                     onClick={() => {
 
-                                        setSelectedAgent(
-                                            agent
-                                        );
+//                                         setSelectedAgent(
+//                                             agent
+//                                         );
 
-                                        setShow(
-                                            true
-                                        );
-                                    }}
-                                >
+//                                         setShow(
+//                                             true
+//                                         );
+//                                     }}
+//                                 >
 
-                                    <div className="manager-banner"></div>
+//                                     <div className="manager-banner"></div>
 
-                                    <div className="manager-avatar">
+//                                     <div className="manager-avatar">
 
-                                        <img
-                                            src={`https://ui-avatars.com/api/?name=${agent.name}&background=16a34a&color=ffffff&size=256`}
-                                            alt=""
-                                        />
+//                                         <img
+//                                             src={`https://ui-avatars.com/api/?name=${agent.name}&background=16a34a&color=ffffff&size=256`}
+//                                             alt=""
+//                                         />
 
-                                    </div>
+//                                     </div>
 
-                                    <div className="manager-content">
+//                                     <div className="manager-content">
 
-                                        <h4>
-                                            {agent.name}
-                                        </h4>
+//                                         <h4>
+//                                             {agent.name}
+//                                         </h4>
 
-                                        <div className="city-badge">
+//                                         <div className="city-badge">
 
-                                            {
-                                                agent.assignedCity
-                                            }
+//                                             {
+//                                                 agent.assignedCity
+//                                             }
 
-                                        </div>
+//                                         </div>
 
-                                        <p>
+//                                         <p>
 
-                                            {
-                                                agent.assignedArea
-                                            }
+//                                             {
+//                                                 agent.assignedArea
+//                                             }
 
-                                        </p>
+//                                         </p>
 
-                                        <p>
+//                                         <p>
 
-                                            {
-                                                agent.email
-                                            }
+//                                             {
+//                                                 agent.email
+//                                             }
 
-                                        </p>
+//                                         </p>
 
-                                        <div className="d-flex justify-content-center gap-2 mt-3">
+//                                         <div className="d-flex justify-content-center gap-2 mt-3">
 
-                                            <span className="badge bg-success">
-                                                Active
-                                            </span>
+//                                             <span className="badge bg-success">
+//                                                 Active
+//                                             </span>
 
-                                            <span className="badge bg-dark">
-                                                Agent
-                                            </span>
+//                                             <span className="badge bg-dark">
+//                                                 Agent
+//                                             </span>
 
-                                        </div>
+//                                         </div>
 
-                                        <button
-                                            className="view-btn mt-4"
-                                        >
-                                            View Details
-                                        </button>
+//                                         <button
+//                                             className="view-btn mt-4"
+//                                         >
+//                                             View Details
+//                                         </button>
 
-                                    </div>
+//                                     </div>
 
-                                </div>
+//                                 </div>
 
-                            </div>
+//                             </div>
 
-                        )
-                    )
+//                         )
+//                     )
 
-                }
+//                 }
 
-            </div>
+//             </div>
 
-            <Modal
-                show={show}
-                centered
-                onHide={() =>
-                    setShow(false)
-                }
-            >
+//             <Modal
+//                 show={show}
+//                 centered
+//                 onHide={() =>
+//                     setShow(false)
+//                 }
+//             >
 
-                <Modal.Header closeButton>
+//                 <Modal.Header closeButton>
 
-                    <Modal.Title>
+//                     <Modal.Title>
 
-                        👨‍💻 Agent Details
+//                         👨‍💻 Agent Details
 
-                    </Modal.Title>
+//                     </Modal.Title>
 
-                </Modal.Header>
+//                 </Modal.Header>
 
-                <Modal.Body>
+//                 <Modal.Body>
 
-                    {
+//                     {
 
-                        selectedAgent &&
+//                         selectedAgent &&
 
-                        <>
+//                         <>
 
-                            <div className="text-center mb-4">
+//                             <div className="text-center mb-4">
 
-                                <img
-                                    src={`https://ui-avatars.com/api/?name=${selectedAgent.name}&background=16a34a&color=ffffff&size=256`}
-                                    alt=""
-                                    style={{
-                                        width: "100px",
-                                        height: "100px",
-                                        borderRadius: "50%"
-                                    }}
-                                />
+//                                 <img
+//                                     src={`https://ui-avatars.com/api/?name=${selectedAgent.name}&background=16a34a&color=ffffff&size=256`}
+//                                     alt=""
+//                                     style={{
+//                                         width: "100px",
+//                                         height: "100px",
+//                                         borderRadius: "50%"
+//                                     }}
+//                                 />
 
-                            </div>
+//                             </div>
 
-                            <p>
+//                             <p>
 
-                                <strong>
-                                    Name :
-                                </strong>
+//                                 <strong>
+//                                     Name :
+//                                 </strong>
 
-                                {" "}
+//                                 {" "}
 
-                                {
-                                    selectedAgent.name
-                                }
+//                                 {
+//                                     selectedAgent.name
+//                                 }
 
-                            </p>
+//                             </p>
 
-                            <p>
+//                             <p>
 
-                                <strong>
-                                    Email :
-                                </strong>
+//                                 <strong>
+//                                     Email :
+//                                 </strong>
 
-                                {" "}
+//                                 {" "}
 
-                                {
-                                    selectedAgent.email
-                                }
+//                                 {
+//                                     selectedAgent.email
+//                                 }
 
-                            </p>
+//                             </p>
 
-                            <p>
+//                             <p>
 
-                                <strong>
-                                    Mobile :
-                                </strong>
+//                                 <strong>
+//                                     Mobile :
+//                                 </strong>
 
-                                {" "}
+//                                 {" "}
 
-                                {
-                                    selectedAgent.mobile
-                                }
+//                                 {
+//                                     selectedAgent.mobile
+//                                 }
 
-                            </p>
+//                             </p>
 
-                            <p>
+//                             <p>
 
-                                <strong>
-                                    City :
-                                </strong>
+//                                 <strong>
+//                                     City :
+//                                 </strong>
 
-                                {" "}
+//                                 {" "}
 
-                                {
-                                    selectedAgent.assignedCity
-                                }
+//                                 {
+//                                     selectedAgent.assignedCity
+//                                 }
 
-                            </p>
+//                             </p>
 
-                            <p>
+//                             <p>
 
-                                <strong>
-                                    Area :
-                                </strong>
+//                                 <strong>
+//                                     Area :
+//                                 </strong>
 
-                                {" "}
+//                                 {" "}
 
-                                {
-                                    selectedAgent.assignedArea
-                                }
+//                                 {
+//                                     selectedAgent.assignedArea
+//                                 }
 
-                            </p>
+//                             </p>
 
-                            <p>
+//                             <p>
 
-                                <strong>
-                                    Location :
-                                </strong>
+//                                 <strong>
+//                                     Location :
+//                                 </strong>
 
-                                {" "}
+//                                 {" "}
 
-                                {
-                                    selectedAgent.location
-                                }
+//                                 {
+//                                     selectedAgent.location
+//                                 }
 
-                            </p>
+//                             </p>
 
-                            <p>
+//                             <p>
 
-                                <strong>
-                                    Manager Id :
-                                </strong>
+//                                 <strong>
+//                                     Manager Id :
+//                                 </strong>
 
-                                {" "}
+//                                 {" "}
 
-                                {
-                                    selectedAgent.assignedManagerId
-                                }
+//                                 {
+//                                     selectedAgent.assignedManagerId
+//                                 }
 
-                            </p>
+//                             </p>
 
-                        </>
+//                         </>
 
-                    }
+//                     }
 
-                </Modal.Body>
+//                 </Modal.Body>
 
-                <Modal.Footer>
+//                 <Modal.Footer>
 
-                    <Button
-                        variant="secondary"
-                        onClick={() =>
-                            setShow(false)
-                        }
-                    >
-                        Close
-                    </Button>
+//                     <Button
+//                         variant="secondary"
+//                         onClick={() =>
+//                             setShow(false)
+//                         }
+//                     >
+//                         Close
+//                     </Button>
 
-                </Modal.Footer>
+//                 </Modal.Footer>
 
-            </Modal>
+//             </Modal>
 
-        </div>
+//         </div>
 
-    );
-}
+//     );
+// }
 
-export default AgentsViewPage;
+// export default AgentsViewPage;

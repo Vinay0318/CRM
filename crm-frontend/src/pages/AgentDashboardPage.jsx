@@ -1,17 +1,45 @@
 import React, { useState } from "react";
 
 import AgentSidebar from "../components/agent/AgentSidebar";
-import FollowUpManagement from "../components/agent/FollowUpManagement"
 import AgentDashboard from "../components/agent/AgentDashboard";
 import AgentLeads from "../components/agent/AgentLeads";
+import FollowUpManagement from "../components/agent/FollowUpManagement";
+import SiteVisitManagement from "../components/agent/SiteVisitManagement";
 import LeadNote from "../components/agent/LeadNote";
 import AgentStatistics from "../components/agent/AgentStatistics";
-import SiteVisitManagement from "../components/agent/SiteVisitManagement";
 
 function AgentDashboardPage() {
 
-    const [activeTab, setActiveTab] =
-        useState("dashboard");
+    const [activeTab, setActiveTab] = useState("dashboard");
+
+    const renderContent = () => {
+
+        switch (activeTab) {
+
+            case "dashboard":
+                return <AgentDashboard />;
+
+            case "leads":
+                return <AgentLeads />;
+
+            case "followups":
+                return <FollowUpManagement />;
+
+            case "visits":
+                return <SiteVisitManagement />;
+
+            case "notes":
+                return <LeadNote />;
+
+            case "stats":
+                return <AgentStatistics />;
+
+            default:
+                return <AgentDashboard />;
+
+        }
+
+    };
 
     return (
 
@@ -22,43 +50,16 @@ function AgentDashboardPage() {
                 setActiveTab={setActiveTab}
             />
 
-            <div className="dashboard-content">
+            <main className="dashboard-content">
 
-                {
-                    activeTab === "dashboard" &&
-                    <AgentDashboard />
-                }
+                {renderContent()}
 
-                {
-                    activeTab === "leads" &&
-                    <AgentLeads />
-                }
-
-                {
-                    activeTab === "followups" &&
-                    <FollowUpManagement />
-                }
-
-                {
-                    activeTab === "visits" &&
-                    <SiteVisitManagement />
-                }
-
-                {
-                    activeTab === "notes" &&
-                    <LeadNote />
-                }
-
-                {
-                    activeTab === "stats" &&
-                    <AgentStatistics />
-                }
-
-            </div>
+            </main>
 
         </div>
 
     );
+
 }
 
-export default AgentDashboardPage;
+export default React.memo(AgentDashboardPage);

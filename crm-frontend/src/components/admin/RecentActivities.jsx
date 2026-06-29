@@ -1,17 +1,13 @@
 import React, {
     useEffect,
     useState
-}
-from "react";
+} from "react";
 
-import LeadService
-from "../../services/LeadService";
+import LeadService from "../../services/LeadService";
 
 function RecentActivities() {
 
-    const [activities,
-        setActivities] =
-        useState([]);
+    const [activities, setActivities] = useState([]);
 
     useEffect(() => {
 
@@ -19,135 +15,197 @@ function RecentActivities() {
 
     }, []);
 
-    const loadActivities =
-        async () => {
+    // =============================
+    // Load Recent Activities
+    // =============================
 
-            try {
+    const loadActivities = async () => {
 
-                const response =
-                    await LeadService.getAllLeads();
+        try {
 
-                const latestLeads =
-                    response.data
-                    .sort((a,b)=>
+            const response =
+                await LeadService.getAllLeads();
 
-                        new Date(b.createdAt)
-                        -
-                        new Date(a.createdAt)
+            const latestLeads =
+
+                [...response.data]
+
+                    .sort(
+
+                        (a, b) =>
+
+                            new Date(b.createdAt) -
+
+                            new Date(a.createdAt)
 
                     )
-                    .slice(0,6);
 
-                setActivities(
-                    latestLeads
-                );
+                    .slice(0, 6);
 
-            }
+            setActivities(latestLeads);
 
-            catch(error){
+        }
 
-                console.log(error);
+        catch (error) {
 
-            }
-        };
+            console.error(
 
-    const getTimeAgo =
-        (date) => {
+                "Unable to load activities",
 
-            const seconds =
-                Math.floor(
-                    (
-                        new Date()
-                        -
-                        new Date(date)
-                    ) / 1000
-                );
+                error
 
-            const minutes =
-                Math.floor(seconds/60);
+            );
 
-            const hours =
-                Math.floor(minutes/60);
+        }
 
-            const days =
-                Math.floor(hours/24);
+    };
 
-            if(days > 0)
-                return `${days} day ago`;
+    // =============================
+    // Time Ago
+    // =============================
 
-            if(hours > 0)
-                return `${hours} hr ago`;
+    const getTimeAgo = (date) => {
 
-            if(minutes > 0)
-                return `${minutes} min ago`;
+        if (!date) {
 
-            return "Just Now";
-        };
+            return "-";
 
-    const getStatusColor =
-        (status) => {
+        }
 
-            switch(status){
+        const seconds = Math.floor(
 
-                case "NEW":
-                    return "#3b82f6";
+            (new Date() - new Date(date)) / 1000
 
-                case "CONTACTED":
-                    return "#10b981";
+        );
 
-                case "INTERESTED":
-                    return "#f59e0b";
+        const minutes = Math.floor(seconds / 60);
 
-                case "BOOKING":
-                    return "#ef4444";
+        const hours = Math.floor(minutes / 60);
 
-                default:
-                    return "#64748b";
-            }
-        };
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) {
+
+            return `${days} day${days > 1 ? "s" : ""} ago`;
+
+        }
+
+        if (hours > 0) {
+
+            return `${hours} hr${hours > 1 ? "s" : ""} ago`;
+
+        }
+
+        if (minutes > 0) {
+
+            return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
+
+        }
+
+        return "Just Now";
+
+    };
 
     return (
 
         <div className="recent-activity-card">
 
             {
-                activities.map(
-                    (lead)=>(
 
-                        <div className="activity-item">
+                activities.length === 0 ? (
 
-                        <div className="activity-avatar">
-                    
-                            {lead.name.charAt(0)}
-                    
-                        </div>
-                    
-                        <div className="activity-info">
-                    
-                            <h6>{lead.name}</h6>
-                    
-                            <p>{lead.location}</p>
-                    
-                            <small>
-                                {getTimeAgo(lead.createdAt)}
-                            </small>
-                    
-                        </div>
-                    
-                        <span
-                            className={`activity-status ${lead.status}`}
-                        >
-                            {lead.status}
-                        </span>
-                    
+                    <div className="text-center py-4">
+
+                        <h6 className="text-muted">
+
+                            No Recent Activities
+
+                        </h6>
+
                     </div>
 
-                    )
+                ) : (
+
+                    activities.map((lead) => (
+
+                        <div
+
+                            key={lead.leadid}
+
+                            className="activity-item"
+
+                        >
+
+                            <div className="activity-avatar">
+
+                                {
+
+                                    (lead.name || "?")
+
+                                        .charAt(0)
+
+                                        .toUpperCase()
+
+                                }
+
+                            </div>
+
+                            <div className="activity-info">
+
+                                <h6>
+
+                                    {lead.name || "-"}
+
+                                </h6>
+
+                                <p>
+
+                                    {lead.location || "-"}
+
+                                </p>
+
+                                <small>
+
+                                    {
+
+                                        getTimeAgo(
+
+                                            lead.createdAt
+
+                                        )
+
+                                    }
+
+                                </small>
+
+                            </div>
+
+                            <span
+
+                                className={`activity-status ${
+
+                                    lead.status?.toLowerCase() || ""
+
+                                }`}
+
+                            >
+
+                                {lead.status || "-"}
+
+                            </span>
+
+                        </div>
+
+                    ))
+
                 )
+
             }
 
         </div>
+
     );
+
 }
 
-export default RecentActivities;
+export default React.memo(RecentActivities);

@@ -1,14 +1,13 @@
 import React, {
     useEffect,
+    useMemo,
     useState
-}
-from "react";
+} from "react";
 
-import LeadService
-from "../../services/LeadService";
+import LeadService from "../../services/LeadService";
 
 import AdminLayout from "./AdminLayout";
- 
+
 import {
     Modal,
     Button
@@ -18,20 +17,14 @@ import "../../styles/viewPages.css";
 
 function LeadsViewPage() {
 
-    const [leads,
-        setLeads] =
-        useState([]);
+    const [leads, setLeads] = useState([]);
 
-    const [search,
-        setSearch] =
-        useState("");
+    const [search, setSearch] = useState("");
 
-    const [selectedLead,
-        setSelectedLead] =
+    const [selectedLead, setSelectedLead] =
         useState(null);
 
-    const [show,
-        setShow] =
+    const [show, setShow] =
         useState(false);
 
     useEffect(() => {
@@ -40,169 +33,290 @@ function LeadsViewPage() {
 
     }, []);
 
-    const loadLeads =
-        async () => {
+    const loadLeads = async () => {
 
-            try {
+        try {
 
-                const response =
-                    await LeadService.getAllLeads();
+            const response =
+                await LeadService.getAllLeads();
 
-                setLeads(
-                    response.data
-                );
+            setLeads(response.data);
 
-            } catch (error) {
+        }
 
-                console.error(error);
-            }
-        };
+        catch (error) {
 
-    const filteredLeads =
-        leads.filter(
-            lead =>
-                lead.name
-                    ?.toLowerCase()
-                    .includes(
-                        search.toLowerCase()
-                    ) ||
+            console.error(
+                "Unable to load leads",
+                error
+            );
 
-                lead.location
-                    ?.toLowerCase()
-                    .includes(
-                        search.toLowerCase()
-                    )
+        }
+
+    };
+
+    // Avatar Helper
+
+    const getAvatar = (name) =>
+
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            name
+        )}&background=f59e0b&color=ffffff&size=256`;
+
+    // Optimized Search
+
+    const filteredLeads = useMemo(() => {
+
+        const keyword =
+            search.toLowerCase();
+
+        return leads.filter(lead =>
+
+            lead.name
+                ?.toLowerCase()
+                .includes(keyword)
+
+            ||
+
+            lead.email
+                ?.toLowerCase()
+                .includes(keyword)
+
+            ||
+
+            lead.mobileNo
+                ?.includes(search)
+
+            ||
+
+            lead.location
+                ?.toLowerCase()
+                .includes(keyword)
+
+            ||
+
+            lead.property_type
+                ?.toLowerCase()
+                .includes(keyword)
+
+            ||
+
+            lead.status
+                ?.toLowerCase()
+                .includes(keyword)
+
         );
 
-        return (
+    }, [leads, search]);
 
-            <AdminLayout>
-        
-                <div className="view-page">
-        
-                    <div className="page-header">
-        
-                        <div>
-        
-                            <h1 className="page-title">
-                                📋 Leads Overview
-                            </h1>
-        
-                            <p className="page-subtitle">
-                                Monitor all customer enquiries and leads
-                            </p>
-        
-                        </div>
-        
-                        <div className="header-count">
-        
-                            {filteredLeads.length}
-        
-                            <span>
-                                Leads
-                            </span>
-        
-                        </div>
-        
+    return (
+
+        <AdminLayout>
+
+            <div className="view-page">
+
+                {/* Header */}
+
+                <div className="page-header">
+
+                    <div>
+
+                        <h1 className="page-title">
+
+                            📋 Leads Overview
+
+                        </h1>
+
+                        <p className="page-subtitle">
+
+                            Monitor all customer enquiries and leads
+
+                        </p>
+
                     </div>
-        
-                    <div className="search-wrapper">
-        
-                        <i className="bi bi-search search-icon"></i>
-        
-                        <input
-                            type="text"
-                            className="form-control search-box"
-                            placeholder="Search By Name Or Location..."
-                            value={search}
-                            onChange={(e) =>
-                                setSearch(e.target.value)
-                            }
-                        />
-        
+
+                    <div className="header-count">
+
+                        {filteredLeads.length}
+
+                        <span>
+
+                            Leads
+
+                        </span>
+
                     </div>
-        
-                    <div className="row mt-4">
-        
-                        {filteredLeads.map((lead) => (
-        
-                            <div
-                                className="col-lg-4 col-md-6 mb-4"
-                                key={lead.leadid}
-                            >
-        
-                                
-                                    <div className="manager-card h-100">
-                                
-        
-                                    <div className="manager-banner"></div>
-        
-                                    <div className="manager-avatar">
-        
-                                        <img
-                                            src={`https://ui-avatars.com/api/?name=${lead.name}&background=f59e0b&color=ffffff&size=256`}
-                                            alt=""
-                                        />
-        
-                                    </div>
-        
-                                    <div className="manager-content">
-        
-                                        <h4>
-                                            {lead.name}
-                                        </h4>
-        
-                                        <div className="city-badge">
-                                            {lead.location}
-                                        </div>
-        
-                                        <p>
-                                            {lead.email}
-                                        </p>
-        
-                                        <div className="status-badge">
-                                            {lead.status}
-                                        </div>
-        
-                                        <button
-    type="button"
-    className="view-btn mt-4"
-    onClick={(e) => {
 
-        e.preventDefault();
-        e.stopPropagation();
-
-        setSelectedLead(lead);
-        setShow(true);
-
-    }}
->
-    View Details
-</button>
-        
-                                    </div>
-        
-                                </div>
-        
-                            </div>
-        
-                        ))}
-        
-                    </div>
-        
-                    {/* Modal stays here */}
-        
                 </div>
-                <Modal
+
+                {/* Search */}
+
+                <div className="search-wrapper">
+
+                    <i className="bi bi-search search-icon"></i>
+
+                    <input
+
+                        type="text"
+
+                        className="form-control search-box"
+
+                        placeholder="Search by Name, Email, Mobile, City..."
+
+                        value={search}
+
+                        onChange={(e) =>
+
+                            setSearch(e.target.value)
+
+                        }
+
+                    />
+
+                </div>
+
+                {/* Lead Cards Start */}
+
+                <div className="row mt-4">
+                    {
+    filteredLeads.length > 0 ?
+
+        filteredLeads.map((lead) => (
+
+            <div
+                className="col-lg-4 col-md-6 mb-4"
+                key={lead.leadid}
+            >
+
+                <div className="manager-card h-100">
+
+                    <div className="manager-banner"></div>
+
+                    <div className="manager-avatar">
+
+                        <img
+                            src={getAvatar(lead.name)}
+                            alt={lead.name}
+                        />
+
+                    </div>
+
+                    <div className="manager-content">
+
+                        <h4>
+
+                            {lead.name}
+
+                        </h4>
+
+                        <div className="city-badge">
+
+                            {lead.location}
+
+                        </div>
+
+                        <p>
+
+                            {lead.email}
+
+                        </p>
+
+                        <div className="status-badge">
+
+                            {lead.status}
+
+                        </div>
+
+                        <button
+
+                            type="button"
+
+                            className="view-btn mt-4"
+
+                            onClick={() => {
+
+                                setSelectedLead(lead);
+
+                                setShow(true);
+
+                            }}
+
+                        >
+
+                            <i className="bi bi-eye me-2"></i>
+
+                            View Details
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        ))
+
+        :
+
+        <div className="col-12">
+
+            <div
+                className="text-center py-5"
+            >
+
+                <i
+                    className="bi bi-search"
+                    style={{
+                        fontSize: "50px",
+                        color: "#bdbdbd"
+                    }}
+                ></i>
+
+                <h4
+                    className="mt-3 text-secondary"
+                >
+
+                    No Leads Found
+
+                </h4>
+
+                <p
+                    className="text-muted"
+                >
+
+                    No leads match your search.
+
+                </p>
+
+            </div>
+
+        </div>
+
+}
+</div>
+</div>
+
+{/* Lead Details Modal */}
+
+<Modal
+
     show={show}
+
     centered
+
+    size="lg"
+
     onHide={() => setShow(false)}
+
 >
 
-    <Modal.Header closeButton>
+        <Modal.Header closeButton>
 
         <Modal.Title>
+
             📋 Lead Details
+
         </Modal.Title>
 
     </Modal.Header>
@@ -210,6 +324,7 @@ function LeadsViewPage() {
     <Modal.Body>
 
         {
+
             selectedLead && (
 
                 <>
@@ -217,52 +332,153 @@ function LeadsViewPage() {
                     <div className="text-center mb-4">
 
                         <img
-                            src={`https://ui-avatars.com/api/?name=${selectedLead.name}&background=f59e0b&color=ffffff&size=256`}
-                            alt=""
+
+                            src={getAvatar(selectedLead.name)}
+
+                            alt={selectedLead.name}
+
                             style={{
-                                width: "100px",
-                                height: "100px",
-                                borderRadius: "50%"
+
+                                width: "110px",
+
+                                height: "110px",
+
+                                borderRadius: "50%",
+
+                                border: "4px solid #f59e0b",
+
+                                objectFit: "cover"
+
                             }}
+
                         />
 
                     </div>
 
-                    <p>
-                        <strong>Name :</strong> {selectedLead.name}
-                    </p>
+                    <div className="row">
 
-                    <p>
-                        <strong>Email :</strong> {selectedLead.email}
-                    </p>
+                        <div className="col-md-6 mb-3">
 
-                    <p>
-                        <strong>Mobile :</strong> {selectedLead.mobileNo}
-                    </p>
+                            <strong>Name</strong>
 
-                    <p>
-                        <strong>Location :</strong> {selectedLead.location}
-                    </p>
+                            <p>{selectedLead.name}</p>
 
-                    <p>
-                        <strong>Property Type :</strong> {selectedLead.property_type}
-                    </p>
+                        </div>
 
-                    <p>
-                        <strong>Budget :</strong> ₹ {selectedLead.budget}
-                    </p>
+                        <div className="col-md-6 mb-3">
 
-                    <p>
-                        <strong>Status :</strong> {selectedLead.status}
-                    </p>
+                            <strong>Email</strong>
 
-                    <p>
-                        <strong>Requirement :</strong> {selectedLead.Additional_requirement}
-                    </p>
+                            <p>{selectedLead.email}</p>
+
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+
+                            <strong>Mobile</strong>
+
+                            <p>{selectedLead.mobileNo}</p>
+
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+
+                            <strong>Location</strong>
+
+                            <p>{selectedLead.location}</p>
+
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+
+                            <strong>Property Type</strong>
+
+                            <p>{selectedLead.property_type}</p>
+
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+
+                            <strong>Budget</strong>
+
+                            <p>
+
+                                ₹{" "}
+
+                                {Number(
+
+                                    selectedLead.budget || 0
+
+                                ).toLocaleString("en-IN")}
+
+                            </p>
+
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+
+                            <strong>Status</strong>
+
+                            <p>
+
+                                <span className="badge bg-primary">
+
+                                    {selectedLead.status}
+
+                                </span>
+
+                            </p>
+
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+
+                            <strong>Assigned Agent</strong>
+
+                            <p>
+
+                                {
+
+                                    selectedLead.assignedAgentName ||
+
+                                    "Not Assigned"
+
+                                }
+
+                            </p>
+
+                        </div>
+
+                        <div className="col-12">
+
+                            <strong>
+
+                                Additional Requirement
+
+                            </strong>
+
+                            <div
+                                className="border rounded p-3 mt-2 bg-light"
+                            >
+
+                                {
+
+                                    selectedLead.Additional_requirement ||
+
+                                    "No additional requirement provided."
+
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </>
 
             )
+
         }
 
     </Modal.Body>
@@ -270,19 +486,27 @@ function LeadsViewPage() {
     <Modal.Footer>
 
         <Button
-            variant="secondary"
+
+            variant="dark"
+
             onClick={() => setShow(false)}
+
         >
+
             Close
+
         </Button>
 
     </Modal.Footer>
 
 </Modal>
-        
-            </AdminLayout>
-        
-        );
+
+</AdminLayout>
+
+);
+
 }
 
-export default LeadsViewPage;
+export default React.memo(LeadsViewPage);
+
+

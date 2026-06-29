@@ -1,25 +1,18 @@
-import React,
-{
+import React, {
     useEffect,
+    useMemo,
     useState
-}
-from "react";
+} from "react";
 
-import UserService
-from "../../services/UserService";
+import Swal from "sweetalert2";
 
-import Swal
-from "sweetalert2";
+import UserService from "../../services/UserService";
 
 function ManagerTable() {
 
-    const [managers,
-        setManagers] =
-        useState([]);
+    const [managers, setManagers] = useState([]);
 
-    const [search,
-        setSearch] =
-        useState("");
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
 
@@ -27,174 +20,195 @@ function ManagerTable() {
 
     }, []);
 
-    const loadManagers =
-        async () => {
+    const loadManagers = async () => {
+
+        try {
+
+            const response =
+                await UserService.getManagers();
+
+            setManagers(response.data);
+
+        }
+
+        catch (error) {
+
+            console.error(
+
+                "Unable to load managers",
+
+                error
+
+            );
+
+        }
+
+    };
+
+    const viewManager = (manager) => {
+
+        Swal.fire({
+
+            title: manager.name,
+
+            imageUrl:
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    manager.name
+                )}&background=2563eb&color=ffffff&size=256`,
+
+            imageWidth: 90,
+
+            html: `
+
+                <div style="text-align:left">
+
+                    <p><b>Email :</b> ${manager.email}</p>
+
+                    <p><b>Mobile :</b> ${manager.mobile}</p>
+
+                    <p><b>State :</b> ${manager.location || "-"}</p>
+
+                    <p><b>Assigned City :</b> ${manager.assignedCity || "-"}</p>
+
+                    <p><b>Role :</b> ${manager.role}</p>
+
+                </div>
+
+            `,
+
+            width: 550
+
+        });
+
+    };
+
+    const deleteManager = (id) => {
+
+        Swal.fire({
+
+            title: "Delete Manager?",
+
+            text: "This action cannot be undone.",
+
+            icon: "warning",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#dc3545",
+
+            confirmButtonText: "Delete"
+
+        }).then(async (result) => {
+
+            if (!result.isConfirmed) return;
 
             try {
 
-                const response =
-                    await UserService.getManagers();
+                await UserService.deleteUser(id);
 
-                setManagers(
-                    response.data
+                Swal.fire(
+
+                    "Deleted!",
+
+                    "Manager removed successfully.",
+
+                    "success"
+
                 );
 
-            } catch(error){
+                loadManagers();
 
-                console.log(error);
             }
-        };
 
-    const deleteManager =
-        async (id) => {
+            catch (error) {
 
-            Swal.fire({
+                console.error(error);
 
-                title:
-                    "Delete Manager?",
+                Swal.fire(
 
-                text:
-                    "This action cannot be undone",
+                    "Error",
 
-                icon:
-                    "warning",
+                    "Unable to delete manager.",
 
-                showCancelButton:
-                    true,
+                    "error"
 
-                confirmButtonColor:
-                    "#dc3545"
+                );
 
-            }).then(
-                async(result)=>{
+            }
 
-                    if(result.isConfirmed){
+        });
 
-                        await UserService
-                            .deleteUser(id);
+    };
 
-                        Swal.fire(
-                            "Deleted!",
-                            "Manager Removed",
-                            "success"
-                        );
+    const filteredManagers = useMemo(() => {
 
-                        loadManagers();
-                    }
-                }
-            );
-        };
+        const keyword = search.toLowerCase();
 
-    const viewManager =
-        (manager) => {
+        return managers.filter(manager =>
 
-            Swal.fire({
+            manager.name?.toLowerCase().includes(keyword)
 
-                title:
-                    manager.name,
+            ||
 
-                html: `
+            manager.email?.toLowerCase().includes(keyword)
 
-                    <div style="text-align:left">
+            ||
 
-                        <p>
-                        <b>Email:</b>
-                        ${manager.email}
-                        </p>
+            manager.mobile?.includes(search)
 
-                        <p>
-                        <b>Mobile:</b>
-                        ${manager.mobile}
-                        </p>
+            ||
 
-                        <p>
-                        <b>Assigned City:</b>
-                        ${manager.assignedCity || "-"}
-                        </p>
+            manager.assignedCity?.toLowerCase().includes(keyword)
 
-                        <p>
-                        <b>Location:</b>
-                        ${manager.location || "-"}
-                        </p>
-
-                    </div>
-
-                `,
-
-                width:600
-            });
-        };
-
-    const filteredManagers =
-        managers.filter(
-            (manager)=>
-
-                manager.name
-                ?.toLowerCase()
-                .includes(
-                    search.toLowerCase()
-                )
-
-                ||
-
-                manager.email
-                ?.toLowerCase()
-                .includes(
-                    search.toLowerCase()
-                )
         );
+
+    }, [managers, search]);
 
     return (
 
         <div className="manager-table-card">
 
-            <div
-                className="d-flex
-                justify-content-between
-                align-items-center
-                mb-4"
-            >
+            <div className="d-flex justify-content-between align-items-center mb-4">
 
                 <div>
 
                     <h4>
+
                         Managers
+
                     </h4>
 
-                    <small
-                        style={{
-                            color:"#94a3b8"
-                        }}
-                    >
-                        Total Managers :
-                        {" "}
-                        {filteredManagers.length}
+                    <small style={{ color: "#94a3b8" }}>
+
+                        Total Managers : <strong>{filteredManagers.length}</strong>
+
                     </small>
 
                 </div>
 
                 <input
+
                     type="text"
+
                     className="form-control manager-search"
-                    placeholder="Search Manager..."
+
+                    placeholder="Search by Name, Email, City..."
+
                     value={search}
-                    onChange={(e)=>
-                        setSearch(
-                            e.target.value
-                        )
+
+                    onChange={(e) =>
+
+                        setSearch(e.target.value)
+
                     }
+
                 />
 
             </div>
 
             <div className="table-responsive">
 
-                <table
-                    className="
-                    table
-                    table-hover
-                    manager-table"
-                >
+                <table className="table table-hover manager-table">
 
                     <thead>
 
@@ -217,80 +231,89 @@ function ManagerTable() {
                     <tbody>
 
                         {
-                            filteredManagers.map(
-                                (manager)=>(
 
-                                    <tr
-                                        key={
-                                            manager.userId
-                                        }
-                                    >
+                            filteredManagers.length > 0 ?
 
-                                        <td>
-                                            {manager.name}
-                                        </td>
+                                filteredManagers.map(manager => (
 
-                                        <td>
-                                            {manager.email}
-                                        </td>
+                                    <tr key={manager.userId}>
 
-                                        <td>
-                                            {manager.mobile}
-                                        </td>
+                                        <td>{manager.name}</td>
 
-                                        <td>
-                                            {
-                                                manager.assignedCity
-                                            }
-                                        </td>
+                                        <td>{manager.email}</td>
+
+                                        <td>{manager.mobile}</td>
+
+                                        <td>{manager.assignedCity}</td>
 
                                         <td>
 
                                             <button
-                                                className="
-                                                btn
-                                                btn-info
-                                                btn-sm
-                                                me-2"
-                                                onClick={()=>
-                                                    viewManager(
-                                                        manager
-                                                    )
+
+                                                className="btn btn-info btn-sm me-2"
+
+                                                onClick={() =>
+
+                                                    viewManager(manager)
+
                                                 }
+
                                             >
+
                                                 <i className="bi bi-eye"></i>
+
                                             </button>
 
                                             <button
-                                                className="
-                                                btn
-                                                btn-warning
-                                                btn-sm
-                                                me-2"
+
+                                                className="btn btn-warning btn-sm me-2"
+
                                             >
+
                                                 <i className="bi bi-pencil-square"></i>
+
                                             </button>
 
                                             <button
-                                                className="
-                                                btn
-                                                btn-danger
-                                                btn-sm"
-                                                onClick={()=>
-                                                    deleteManager(
-                                                        manager.userId
-                                                    )
+
+                                                className="btn btn-danger btn-sm"
+
+                                                onClick={() =>
+
+                                                    deleteManager(manager.userId)
+
                                                 }
+
                                             >
+
                                                 <i className="bi bi-trash"></i>
+
                                             </button>
 
                                         </td>
 
                                     </tr>
 
-                                )
-                            )
+                                ))
+
+                                :
+
+                                <tr>
+
+                                    <td
+
+                                        colSpan="5"
+
+                                        className="text-center py-4 text-muted"
+
+                                    >
+
+                                        No managers found.
+
+                                    </td>
+
+                                </tr>
+
                         }
 
                     </tbody>
@@ -302,6 +325,7 @@ function ManagerTable() {
         </div>
 
     );
+
 }
 
-export default ManagerTable;
+export default React.memo(ManagerTable);

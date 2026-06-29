@@ -1,41 +1,72 @@
 import React from "react";
 
 import {
-    Navigate
-}
-from "react-router-dom";
+    Navigate,
+    useLocation
+} from "react-router-dom";
 
 function ProtectedRoute({
 
     children,
+
     role
 
 }) {
 
+    const location = useLocation();
+
     const token =
-        localStorage.getItem(
-            "token"
-        );
+        localStorage.getItem("token");
 
     const userRole =
-        localStorage.getItem(
-            "role"
-        );
+        localStorage.getItem("role");
 
+    // User not logged in
     if (!token) {
 
-        return <Navigate to="/" />;
+        return (
+
+            <Navigate
+
+                to="/"
+
+                replace
+
+                state={{
+                    from: location
+                }}
+
+            />
+
+        );
+
     }
 
+    // Unauthorized Role
     if (
+
         role &&
+
         role !== userRole
+
     ) {
 
-        return <Navigate to="/" />;
+        return (
+
+            <Navigate
+
+                to="/"
+
+                replace
+
+            />
+
+        );
+
     }
 
     return children;
+
 }
 
-export default ProtectedRoute;
+export default React.memo(ProtectedRoute);

@@ -1,355 +1,438 @@
-import React, {
-    useEffect,
-    useState
-} from "react";
+// import React, {
+//     useEffect,
+//     useMemo,
+//     useState
+// } from "react";
 
-import UserService
-from "../../services/UserService";
+// import UserService from "../../services/UserService";
 
-import {
-    Modal,
-    Button
-}
-from "react-bootstrap";
+// import {
+//     Modal,
+//     Button
+// } from "react-bootstrap";
 
-import "../../styles/viewPages.css";
+// import "../../styles/viewPages.css";
 
-function ManagersViewPage() {
+// function ManagersViewPage() {
 
-    const [managers,
-        setManagers] =
-        useState([]);
+//     const [managers, setManagers] = useState([]);
 
-    const [searchCity,
-        setSearchCity] =
-        useState("");
+//     const [search, setSearch] = useState("");
 
-    const [selectedManager,
-        setSelectedManager] =
-        useState(null);
+//     const [selectedManager, setSelectedManager] = useState(null);
 
-    const [show,
-        setShow] =
-        useState(false);
+//     const [show, setShow] = useState(false);
 
-    useEffect(() => {
+//     useEffect(() => {
 
-        loadManagers();
+//         loadManagers();
 
-    }, []);
+//     }, []);
 
-    const loadManagers =
-        async () => {
+//     const loadManagers = async () => {
 
-            try {
+//         try {
 
-                const response =
-                    await UserService.getManagers();
+//             const response = await UserService.getManagers();
 
-                setManagers(
-                    response.data
-                );
+//             setManagers(response.data);
 
-            } catch (error) {
+//         }
 
-                console.error(
-                    error
-                );
-            }
-        };
+//         catch (error) {
 
-    const filteredManagers =
-        managers.filter(
-            manager =>
-                manager.assignedCity
-                    ?.toLowerCase()
-                    .includes(
-                        searchCity.toLowerCase()
-                    )
-        );
+//             console.error(
 
-    return (
+//                 "Unable to load managers",
 
-        <div className="view-page">
+//                 error
 
-            {/* Header */}
+//             );
 
-            <div className="page-header">
+//         }
 
-                <div>
+//     };
 
-                    <h1 className="page-title">
-                        👨‍💼 Managers Overview
-                    </h1>
+//     const getAvatar = (name) =>
 
-                    <p className="page-subtitle">
-                        Monitor and manage all managers across cities
-                    </p>
+//         `https://ui-avatars.com/api/?name=${encodeURIComponent(
+//             name
+//         )}&background=2563eb&color=ffffff&size=256`;
 
-                </div>
+//     const filteredManagers = useMemo(() => {
 
-                <div className="header-count">
+//         const keyword = search.toLowerCase();
 
-                    {filteredManagers.length}
+//         return managers.filter(manager =>
 
-                    <span>
-                        Managers
-                    </span>
+//             manager.name?.toLowerCase().includes(keyword)
 
-                </div>
+//             ||
 
-            </div>
+//             manager.email?.toLowerCase().includes(keyword)
 
-            {/* Search */}
+//             ||
 
-            <div className="search-wrapper mb-4">
+//             manager.mobile?.includes(search)
 
-                <i className="bi bi-search search-icon"></i>
+//             ||
 
-                <input
-                    type="text"
-                    className="form-control search-box"
-                    placeholder="Search Managers By City..."
-                    value={searchCity}
-                    onChange={(e) =>
-                        setSearchCity(
-                            e.target.value
-                        )
-                    }
-                />
+//             manager.assignedCity?.toLowerCase().includes(keyword)
 
-            </div>
+//         );
 
-            {/* Cards */}
+//     }, [managers, search]);
 
-            <div className="row">
+//     return (
 
-                {
+//         <div className="view-page">
 
-                    filteredManagers.map(
-                        manager => (
+//             {/* Header */}
 
-                            <div
-                                className="col-lg-4 col-md-6 mb-4"
-                                key={
-                                    manager.userId
-                                }
-                            >
+//             <div className="page-header">
 
-                                <div
-                                    className="manager-card h-100"
-                                    onClick={() => {
+//                 <div>
 
-                                        setSelectedManager(
-                                            manager
-                                        );
+//                     <h1 className="page-title">
 
-                                        setShow(
-                                            true
-                                        );
-                                    }}
-                                >
+//                         👨‍💼 Managers Overview
 
-                                    <div className="manager-banner"></div>
+//                     </h1>
 
-                                    <div className="manager-avatar">
+//                     <p className="page-subtitle">
 
-                                        <img
-                                            src={`https://ui-avatars.com/api/?name=${manager.name}&background=2563eb&color=ffffff&size=256`}
-                                            alt=""
-                                        />
+//                         Monitor and manage all managers
 
-                                    </div>
+//                     </p>
 
-                                    <div className="manager-content">
+//                 </div>
 
-                                        <h4>
-                                            {manager.name}
-                                        </h4>
+//                 <div className="header-count">
 
-                                        <div className="city-badge">
+//                     {filteredManagers.length}
 
-                                            {
-                                                manager.assignedCity
-                                            }
+//                     <span>
 
-                                        </div>
+//                         Managers
 
-                                        <p>
+//                     </span>
 
-                                            {
-                                                manager.email
-                                            }
+//                 </div>
 
-                                        </p>
+//             </div>
 
-                                        <div className="d-flex justify-content-center gap-2 mt-3">
+//             {/* Search */}
 
-                                            <span className="badge bg-success">
-                                                Active
-                                            </span>
+//             <div className="search-wrapper mb-4">
 
-                                            <span className="badge bg-primary">
-                                                Manager
-                                            </span>
+//                 <i className="bi bi-search search-icon"></i>
 
-                                        </div>
+//                 <input
 
-                                        <button
-                                            className="view-btn mt-4"
-                                        >
-                                            View Details
-                                        </button>
+//                     type="text"
 
-                                    </div>
+//                     className="form-control search-box"
 
-                                </div>
+//                     placeholder="Search by Name, Email, City..."
 
-                            </div>
+//                     value={search}
 
-                        )
-                    )
+//                     onChange={(e) =>
 
-                }
+//                         setSearch(e.target.value)
 
-            </div>
+//                     }
 
-            {/* Modal */}
+//                 />
 
-            <Modal
-                show={show}
-                centered
-                onHide={() =>
-                    setShow(false)
-                }
-            >
+//             </div>
 
-                <Modal.Header closeButton>
+//             {/* Cards */}
 
-                    <Modal.Title>
+//             <div className="row">
 
-                        👨‍💼 Manager Details
+//                 {
 
-                    </Modal.Title>
+//                     filteredManagers.length > 0 ?
 
-                </Modal.Header>
+//                         filteredManagers.map(manager => (
 
-                <Modal.Body>
+//                             <div
 
-                    {
+//                                 className="col-lg-4 col-md-6 mb-4"
 
-                        selectedManager &&
+//                                 key={manager.userId}
 
-                        <>
+//                             >
 
-                            <div className="text-center mb-4">
+//                                 <div
 
-                                <img
-                                    src={`https://ui-avatars.com/api/?name=${selectedManager.name}&background=2563eb&color=ffffff&size=256`}
-                                    alt=""
-                                    style={{
-                                        width: "100px",
-                                        height: "100px",
-                                        borderRadius: "50%"
-                                    }}
-                                />
+//                                     className="manager-card h-100"
 
-                            </div>
+//                                     onClick={() => {
 
-                            <p>
+//                                         setSelectedManager(manager);
 
-                                <strong>
-                                    Name :
-                                </strong>
+//                                         setShow(true);
 
-                                {" "}
+//                                     }}
 
-                                {
-                                    selectedManager.name
-                                }
+//                                 >
 
-                            </p>
+//                                     <div className="manager-banner"></div>
 
-                            <p>
+//                                     <div className="manager-avatar">
 
-                                <strong>
-                                    Email :
-                                </strong>
+//                                         <img
 
-                                {" "}
+//                                             src={getAvatar(manager.name)}
 
-                                {
-                                    selectedManager.email
-                                }
+//                                             alt={manager.name}
 
-                            </p>
+//                                         />
 
-                            <p>
+//                                     </div>
 
-                                <strong>
-                                    Mobile :
-                                </strong>
+//                                     <div className="manager-content">
 
-                                {" "}
+//                                         <h4>
 
-                                {
-                                    selectedManager.mobile
-                                }
+//                                             {manager.name}
 
-                            </p>
+//                                         </h4>
 
-                            <p>
+//                                         <div className="city-badge">
 
-                                <strong>
-                                    Assigned City :
-                                </strong>
+//                                             {manager.assignedCity}
 
-                                {" "}
+//                                         </div>
 
-                                {
-                                    selectedManager.assignedCity
-                                }
+//                                         <p>
 
-                            </p>
+//                                             {manager.email}
 
-                            <p>
+//                                         </p>
 
-                                <strong>
-                                    Location :
-                                </strong>
+//                                         <div className="d-flex justify-content-center gap-2 mt-3">
 
-                                {" "}
+//                                             <span className="badge bg-success">
 
-                                {
-                                    selectedManager.location
-                                }
+//                                                 Active
 
-                            </p>
+//                                             </span>
 
-                        </>
+//                                             <span className="badge bg-primary">
 
-                    }
+//                                                 Manager
 
-                </Modal.Body>
+//                                             </span>
 
-                <Modal.Footer>
+//                                         </div>
 
-                    <Button
-                        variant="secondary"
-                        onClick={() =>
-                            setShow(false)
-                        }
-                    >
-                        Close
-                    </Button>
+//                                         <button
 
-                </Modal.Footer>
+//                                             className="view-btn mt-4"
 
-            </Modal>
+//                                         >
 
-        </div>
+//                                             <i className="bi bi-eye me-2"></i>
 
-    );
-}
+//                                             View Details
 
-export default ManagersViewPage; 
+//                                         </button>
+
+//                                     </div>
+
+//                                 </div>
+
+//                             </div>
+
+//                         ))
+
+//                         :
+
+//                         <div className="col-12">
+
+//                             <div className="text-center py-5">
+
+//                                 <i
+
+//                                     className="bi bi-search"
+
+//                                     style={{
+
+//                                         fontSize: "50px",
+
+//                                         color: "#bdbdbd"
+
+//                                     }}
+
+//                                 ></i>
+
+//                                 <h4 className="mt-3 text-secondary">
+
+//                                     No Managers Found
+
+//                                 </h4>
+
+//                                 <p className="text-muted">
+
+//                                     No managers match your search.
+
+//                                 </p>
+
+//                             </div>
+
+//                         </div>
+
+//                 }
+
+//             </div>
+
+//             {/* Modal */}
+
+//             <Modal
+
+//                 show={show}
+
+//                 centered
+
+//                 size="lg"
+
+//                 onHide={() => setShow(false)}
+
+//             >
+
+//                 <Modal.Header closeButton>
+
+//                     <Modal.Title>
+
+//                         👨‍💼 Manager Details
+
+//                     </Modal.Title>
+
+//                 </Modal.Header>
+
+//                 <Modal.Body>
+
+//                     {
+
+//                         selectedManager &&
+
+//                         <>
+
+//                             <div className="text-center mb-4">
+
+//                                 <img
+
+//                                     src={getAvatar(selectedManager.name)}
+
+//                                     alt={selectedManager.name}
+
+//                                     style={{
+
+//                                         width: "110px",
+
+//                                         height: "110px",
+
+//                                         borderRadius: "50%",
+
+//                                         border: "4px solid #2563eb"
+
+//                                     }}
+
+//                                 />
+
+//                             </div>
+
+//                             <div className="row">
+
+//                                 <div className="col-md-6 mb-3">
+
+//                                     <strong>Name</strong>
+
+//                                     <p>{selectedManager.name}</p>
+
+//                                 </div>
+
+//                                 <div className="col-md-6 mb-3">
+
+//                                     <strong>Email</strong>
+
+//                                     <p>{selectedManager.email}</p>
+
+//                                 </div>
+
+//                                 <div className="col-md-6 mb-3">
+
+//                                     <strong>Mobile</strong>
+
+//                                     <p>{selectedManager.mobile}</p>
+
+//                                 </div>
+
+//                                 <div className="col-md-6 mb-3">
+
+//                                     <strong>State</strong>
+
+//                                     <p>{selectedManager.location}</p>
+
+//                                 </div>
+
+//                                 <div className="col-md-6 mb-3">
+
+//                                     <strong>Assigned City</strong>
+
+//                                     <p>{selectedManager.assignedCity}</p>
+
+//                                 </div>
+
+//                                 <div className="col-md-6 mb-3">
+
+//                                     <strong>Role</strong>
+
+//                                     <p>
+
+//                                         <span className="badge bg-primary">
+
+//                                             {selectedManager.role}
+
+//                                         </span>
+
+//                                     </p>
+
+//                                 </div>
+
+//                             </div>
+
+//                         </>
+
+//                     }
+
+//                 </Modal.Body>
+
+//                 <Modal.Footer>
+
+//                     <Button
+
+//                         variant="dark"
+
+//                         onClick={() => setShow(false)}
+
+//                     >
+
+//                         Close
+
+//                     </Button>
+
+//                 </Modal.Footer>
+
+//             </Modal>
+
+//         </div>
+
+//     );
+
+// }
+
+// export default React.memo(ManagersViewPage);

@@ -1,6 +1,5 @@
 import React from "react";
 import AdminSidebar from "./AdminSidebar";
-
 import "../../styles/Admin.css";
 
 function AdminLayout({ children }) {
@@ -11,15 +10,16 @@ function AdminLayout({ children }) {
 
             <AdminSidebar />
 
-            <div className="admin-content">
+            <main className="admin-content">
 
                 {children}
 
-            </div>
+            </main>
 
         </div>
 
     );
+
 }
 
 export default AdminLayout;

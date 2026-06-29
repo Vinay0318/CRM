@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
+import React, {
+    useEffect,
+    useMemo,
+    useState
+} from "react";
+
 import UserService from "../../services/UserService";
 import LeadService from "../../services/LeadService";
 
 function ManagerAgentTable() {
 
-    const [agents, setAgents] =
-        useState([]);
+    const [agents, setAgents] = useState([]);
 
-    const [leads, setLeads] =
-        useState([]);
+    const [leads, setLeads] = useState([]);
+
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -16,55 +21,105 @@ function ManagerAgentTable() {
 
     }, []);
 
+    // ===========================
+    // Load Data
+    // ===========================
+
     const loadData = async () => {
 
-    try {
+        try {
 
-        const managerId =
-            localStorage.getItem("userId");
+            setLoading(true);
 
-        const city =
-            localStorage.getItem(
-                "assignedCity"
+            const managerId =
+                localStorage.getItem("userId");
+
+            const city =
+                localStorage.getItem("assignedCity");
+
+            const [
+
+                agentRes,
+
+                leadRes
+
+            ] = await Promise.all([
+
+                UserService.getAgentsByManager(managerId),
+
+                LeadService.getLeadsByCity(city)
+
+            ]);
+
+            setAgents(agentRes.data || []);
+
+            setLeads(leadRes.data || []);
+
+        }
+
+        catch (error) {
+
+            console.error(
+
+                "Failed to load manager dashboard data",
+
+                error
+
             );
 
-        const agentRes =
-            await UserService.getAgentsByManager(
-                managerId
-            );
+        }
 
-        const leadRes =
-            await LeadService.getLeadsByCity(
-                city
-            );
+        finally {
 
-        setAgents(
-            agentRes.data
-        );
+            setLoading(false);
 
-        setLeads(
-            leadRes.data
+        }
+
+    };
+
+    // ===========================
+    // Lead Count By Agent
+    // ===========================
+
+    const leadCountMap = useMemo(() => {
+
+        const map = {};
+
+        leads.forEach((lead) => {
+
+            if (lead.assignedAgentName) {
+
+                map[lead.assignedAgentName] =
+
+                    (map[lead.assignedAgentName] || 0) + 1;
+
+            }
+
+        });
+
+        return map;
+
+    }, [leads]);
+
+    if (loading) {
+
+        return (
+
+            <div className="chart-card text-center py-5">
+
+                <div className="spinner-border text-primary"></div>
+
+                <h6 className="mt-3">
+
+                    Loading Agents...
+
+                </h6>
+
+            </div>
+
         );
 
     }
-
-    catch(error){
-
-        console.log(error);
-
-    }
-
-};
-
-    const getLeadCount =
-        (agentName) => {
-
-            return leads.filter(
-                lead =>
-                    lead.assignedAgentName ===
-                    agentName
-            ).length;
-        };
 
     return (
 
@@ -75,89 +130,133 @@ function ManagerAgentTable() {
                 <i className="bi bi-people-fill"></i>
 
                 <h5>
+
                     Agent Performance
+
                 </h5>
 
             </div>
 
-            <table className="table">
+            <div className="table-responsive">
 
-                <thead>
+                <table className="table table-hover">
 
-                    <tr>
+                    <thead>
 
-                        <th>Name</th>
+                        <tr>
 
-                        <th>Area</th>
+                            <th>Name</th>
 
-                        <th>Email</th>
+                            <th>Area</th>
 
-                        <th>Mobile</th>
+                            <th>Email</th>
 
-                        <th>Total Leads</th>
+                            <th>Mobile</th>
 
-                    </tr>
+                            <th>Total Leads</th>
 
-                </thead>
+                        </tr>
 
-                <tbody>
+                    </thead>
 
-                    {
-                        agents.map(
-                            agent => (
+                    <tbody>
 
-                                <tr
-                                    key={
-                                        agent.userId
-                                    }
-                                >
+                        {
 
-                                    <td>
-                                        {agent.name}
-                                    </td>
+                            agents.length === 0 ? (
 
-                                    <td>
-                                        {
-                                            agent.assignedArea
-                                        }
-                                    </td>
+                                <tr>
 
-                                    <td>
-                                        {agent.email}
-                                    </td>
+                                    <td
 
-                                    
-                                    <td>{agent.mobile}</td>
-                                    
+                                        colSpan="5"
 
-                                    <td>
+                                        className="text-center py-4"
 
-                                        <span
-                                            className="badge bg-primary"
-                                        >
+                                    >
 
-                                            {
-                                                getLeadCount(
-                                                    agent.name
-                                                )
-                                            }
-
-                                        </span>
+                                        No Agents Found
 
                                     </td>
 
                                 </tr>
 
+                            ) : (
+
+                                agents.map((agent) => (
+
+                                    <tr
+
+                                        key={agent.userId}
+
+                                    >
+
+                                        <td>
+
+                                            {agent.name || "-"}
+
+                                        </td>
+
+                                        <td>
+
+                                            {
+
+                                                agent.assignedArea ||
+
+                                                "-"
+
+                                            }
+
+                                        </td>
+
+                                        <td>
+
+                                            {agent.email || "-"}
+
+                                        </td>
+
+                                        <td>
+
+                                            {agent.mobile || "-"}
+
+                                        </td>
+
+                                        <td>
+
+                                            <span className="badge bg-primary">
+
+                                                {
+
+                                                    leadCountMap[
+
+                                                        agent.name
+
+                                                    ] || 0
+
+                                                }
+
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
                             )
-                        )
-                    }
 
-                </tbody>
+                        }
 
-            </table>
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
+
     );
+
 }
 
-export default ManagerAgentTable;
+export default React.memo(ManagerAgentTable);

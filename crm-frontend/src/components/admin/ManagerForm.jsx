@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import UserService from "../../services/UserService";
 import Swal from "sweetalert2";
 
-import { locationMap }
-from "../../data/locationMap";
+import { locationMap } from "../../data/locationMap";
 
 function ManagerForm({ loadManagers }) {
+
+    const [loading, setLoading] = useState(false);
 
     const [manager, setManager] = useState({
 
@@ -21,22 +22,51 @@ function ManagerForm({ loadManagers }) {
 
     const handleChange = (e) => {
 
-        setManager({
+        setManager(prev => ({
 
-            ...manager,
+            ...prev,
 
             [e.target.name]: e.target.value
 
-        });
+        }));
+
+    };
+
+    const handleStateChange = (e) => {
+
+        setManager(prev => ({
+
+            ...prev,
+
+            location: e.target.value,
+
+            assignedCity: ""
+
+        }));
+
     };
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
+        setLoading(true);
+
         try {
 
-            await UserService.addUser(manager);
+            const payload = {
+
+                ...manager,
+
+                name: manager.name.trim(),
+
+                email: manager.email.trim(),
+
+                mobile: manager.mobile.trim()
+
+            };
+
+            await UserService.addManager(payload);
 
             Swal.fire({
 
@@ -55,11 +85,17 @@ function ManagerForm({ loadManagers }) {
             setManager({
 
                 name: "",
+
                 email: "",
+
                 mobile: "",
+
                 password: "",
+
                 location: "",
+
                 assignedCity: "",
+
                 role: "MANAGER"
 
             });
@@ -70,7 +106,11 @@ function ManagerForm({ loadManagers }) {
 
             }
 
-        } catch (error) {
+        }
+
+        catch (error) {
+
+            console.error(error);
 
             Swal.fire({
 
@@ -79,11 +119,23 @@ function ManagerForm({ loadManagers }) {
                 title: "Error",
 
                 text:
+
+                    error.response?.data?.message ||
+
                     error.response?.data ||
-                    "Something Went Wrong"
+
+                    "Unable to add manager."
 
             });
+
         }
+
+        finally {
+
+            setLoading(false);
+
+        }
+
     };
 
     return (
@@ -104,13 +156,21 @@ function ManagerForm({ loadManagers }) {
                     <div className="col-md-6 mb-3">
 
                         <input
+
                             type="text"
+
                             name="name"
+
                             placeholder="Manager Name"
+
                             className="form-control"
+
                             value={manager.name}
+
                             onChange={handleChange}
+
                             required
+
                         />
 
                     </div>
@@ -120,14 +180,23 @@ function ManagerForm({ loadManagers }) {
                     <div className="col-md-6 mb-3">
 
                         <input
+
                             type="email"
+
                             name="email"
-                            placeholder="Email"
+
+                            placeholder="Email Address"
+
                             className="form-control"
+
                             value={manager.email}
+
                             onChange={handleChange}
+
                             autoComplete="off"
+
                             required
+
                         />
 
                     </div>
@@ -137,13 +206,25 @@ function ManagerForm({ loadManagers }) {
                     <div className="col-md-6 mb-3">
 
                         <input
-                            type="text"
+
+                            type="tel"
+
                             name="mobile"
+
                             placeholder="Mobile Number"
+
                             className="form-control"
+
                             value={manager.mobile}
+
                             onChange={handleChange}
+
+                            maxLength={10}
+
+                            pattern="[0-9]{10}"
+
                             required
+
                         />
 
                     </div>
@@ -153,14 +234,25 @@ function ManagerForm({ loadManagers }) {
                     <div className="col-md-6 mb-3">
 
                         <input
+
                             type="password"
+
                             name="password"
+
                             placeholder="Password"
+
                             className="form-control"
+
                             value={manager.password}
+
                             onChange={handleChange}
+
                             autoComplete="new-password"
+
+                            minLength={6}
+
                             required
+
                         />
 
                     </div>
@@ -170,42 +262,43 @@ function ManagerForm({ loadManagers }) {
                     <div className="col-md-6 mb-3">
 
                         <select
+
                             name="location"
+
                             className="form-select"
+
                             value={manager.location}
-                            onChange={(e) => {
 
-                                setManager({
+                            onChange={handleStateChange}
 
-                                    ...manager,
-
-                                    location:
-                                        e.target.value,
-
-                                    assignedCity: ""
-
-                                });
-
-                            }}
                             required
+
                         >
 
                             <option value="">
+
                                 Select State
+
                             </option>
 
                             {
-                                Object.keys(locationMap)
-                                    .map(state => (
 
-                                        <option
-                                            key={state}
-                                            value={state}
-                                        >
-                                            {state}
-                                        </option>
+                                Object.keys(locationMap).map(state => (
 
-                                    ))
+                                    <option
+
+                                        key={state}
+
+                                        value={state}
+
+                                    >
+
+                                        {state}
+
+                                    </option>
+
+                                ))
+
                             }
 
                         </select>
@@ -217,32 +310,47 @@ function ManagerForm({ loadManagers }) {
                     <div className="col-md-6 mb-3">
 
                         <select
+
                             name="assignedCity"
+
                             className="form-select"
+
                             value={manager.assignedCity}
+
                             onChange={handleChange}
+
+                            disabled={!manager.location}
+
                             required
+
                         >
 
                             <option value="">
+
                                 Select City
+
                             </option>
 
                             {
+
                                 manager.location &&
 
-                                locationMap[
-                                    manager.location
-                                ]?.map(city => (
+                                locationMap[manager.location]?.map(city => (
 
                                     <option
+
                                         key={city}
+
                                         value={city}
+
                                     >
+
                                         {city}
+
                                     </option>
 
                                 ))
+
                             }
 
                         </select>
@@ -250,17 +358,41 @@ function ManagerForm({ loadManagers }) {
                     </div>
 
                 </div>
-<button
-    type="submit"
-    className="manager-btn"
->
-    <i className="bi bi-person-plus-fill"></i>
-    <span>Add Manager</span>
-</button>
+
+                <button
+
+                    type="submit"
+
+                    className="manager-btn"
+
+                    disabled={loading}
+
+                >
+
+                    <i className="bi bi-person-plus-fill"></i>
+
+                    <span>
+
+                        {
+
+                            loading
+
+                                ? " Adding..."
+
+                                : " Add Manager"
+
+                        }
+
+                    </span>
+
+                </button>
+
             </form>
 
         </div>
+
     );
+
 }
 
-export default ManagerForm;
+export default React.memo(ManagerForm);
